@@ -141,7 +141,7 @@ export default {
           const ids = store.s.leads.slice(0, Math.min(r.created, store.s.leads.length)).map((l) => l.id);
           store.update((s) => {
             s.lists.unshift({ id, name, sub: ui.file, owner: ui.owner, source: 'CSV upload', type: 'Uploaded', people: ids.length, ready: 0, campaign: null, updated: 'Now', filter: null, ids });
-            s.ingestion.imports.unshift({ id: `IMP-${32 + s.ingestion.imports.length}`, file: ui.file, rows: ui.rows, created: r.created, updated: 0, review: r.dupes, failed: r.invalid, by: 'Ahmed Ashour', at: 'Oct 29, 2026 11:05 AM' });
+            s.ingestion.imports.unshift({ id: `IMP-${32 + s.ingestion.imports.length}`, file: ui.file, rows: ui.rows, created: r.created, updated: 0, review: r.dupes, failed: r.invalid, by: 'Yosef Soliman', at: 'Oct 29, 2026 11:05 AM' });
           });
           toast(`“${name}” imported · ${r.created} leads`, `${r.dupes + r.invalid} rows sent to review.${ui.enrich ? ' Enrichment simulated with demo credits.' : ''}`);
           ui = fresh();

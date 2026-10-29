@@ -1,7 +1,7 @@
 // Demo data and session state.
 // Everything here is fictional sample data. Changes live in sessionStorage only and Reset Demo restores the seed.
 
-const KEY = 'leadviron-demo-v1';
+const KEY = 'leadviron-demo-v2';
 
 export const ENRICH_FIELDS = ['company', 'title', 'city', 'size', 'industry', 'linkedin'];
 export const FIELD_LABELS = { company: 'Company', title: 'Job title', city: 'City', size: 'Company size', industry: 'Industry', linkedin: 'LinkedIn URL' };
@@ -100,9 +100,9 @@ function buildLeads() {
 function seed() {
   const leads = buildLeads();
   return {
-    version: 1,
+    version: 2,
     org: { name: 'Upshifters', slug: 'upshifters', industry: 'Marketing & advertising', currency: 'SAR', timezone: 'Asia/Riyadh (UTC+03:00)', language: 'English', dateFormat: 'DD MMM YYYY', weekStart: 'Sunday', landing: 'Dashboard', leadView: 'All leads', notifications: true },
-    me: { name: 'Ahmed Ashour', initials: 'AA', role: 'Admin' },
+    me: { name: 'Yosef Soliman', initials: 'YS', role: 'Admin' },
     leads,
     savedViews: [],
 
@@ -254,7 +254,7 @@ function seed() {
     ],
 
     team: [
-      { id: 'u-aa', name: 'Ahmed Ashour', email: 'ahmed.ashour@example.com', role: 'Admin', team: 'Operations', status: 'Active', access: 'All records' },
+      { id: 'u-ys', name: 'Yosef Soliman', email: 'yosef.soliman@upshifters.me', role: 'Admin', team: 'Operations', status: 'Active', access: 'All records' },
       { id: 'u-mh', name: 'Maya Hassan', email: 'maya.hassan@example.com', role: 'Sales Manager', team: 'Sales B', status: 'Active', access: 'Team records' },
       { id: 'u-sa', name: 'Sara Ahmed', email: 'sara.ahmed@example.com', role: 'Sales Representative', team: 'Sales A', status: 'Active', access: 'Assigned records' },
       { id: 'u-ka', name: 'Khalid Ali', email: 'khalid.ali@example.com', role: 'Sales Representative', team: 'Sales A', status: 'Active', access: 'Assigned records' },
@@ -298,10 +298,10 @@ function seed() {
     },
 
     audit: [
-      { id: 'AUD-0928', time: '09:40 AM', actor: 'Ahmed Ashour', actorRole: 'Admin', action: 'Field display updated', item: 'Company size', result: 'Success', setting: 'Show in lead tables', before: 'Off', after: 'On', link: '#/demo/settings/fields-stages' },
+      { id: 'AUD-0928', time: '09:40 AM', actor: 'Yosef Soliman', actorRole: 'Admin', action: 'Field display updated', item: 'Company size', result: 'Success', setting: 'Show in lead tables', before: 'Off', after: 'On', link: '#/demo/settings/fields-stages' },
       { id: 'AUD-0927', time: '09:32 AM', actor: 'Maya Hassan', actorRole: 'Sales Manager', action: 'Lead owner changed', item: 'Reem Nabil', result: 'Success', setting: 'Owner', before: 'Sara Ahmed', after: 'Maya Hassan', link: '#/demo/leads/LD-1063' },
-      { id: 'AUD-0926', time: '09:18 AM', actor: 'Ahmed Ashour', actorRole: 'Admin', action: 'Member role changed', item: 'Maya Hassan', result: 'Success', setting: 'Role', before: 'Sales Representative', after: 'Sales Manager', link: '#/demo/settings/team' },
-      { id: 'AUD-0925', time: '09:06 AM', actor: 'Ahmed Ashour', actorRole: 'Admin', action: 'Suppression list updated', item: 'Contact policies', result: 'Success', setting: 'Suppression entries', before: '2', after: '3', link: '#/demo/settings/contact-policies' },
+      { id: 'AUD-0926', time: '09:18 AM', actor: 'Yosef Soliman', actorRole: 'Admin', action: 'Member role changed', item: 'Maya Hassan', result: 'Success', setting: 'Role', before: 'Sales Representative', after: 'Sales Manager', link: '#/demo/settings/team' },
+      { id: 'AUD-0925', time: '09:06 AM', actor: 'Yosef Soliman', actorRole: 'Admin', action: 'Suppression list updated', item: 'Contact policies', result: 'Success', setting: 'Suppression entries', before: '2', after: '3', link: '#/demo/settings/contact-policies' },
       { id: 'AUD-0924', time: '08:55 AM', actor: 'Maya Hassan', actorRole: 'Sales Manager', action: 'Import mapping updated', item: 'Q4 prospects.csv', result: 'Success', setting: 'Column "Mobile"', before: 'Not mapped', after: 'Phone', link: '#/demo/settings/ingestion' },
       { id: 'AUD-0923', time: '08:40 AM', actor: 'Sara Ahmed', actorRole: 'Sales Representative', action: 'Export requested', item: 'Lead list', result: 'Blocked', setting: 'Export data', before: '—', after: 'Not permitted for role', link: '#/demo/settings/team' },
     ],
@@ -335,7 +335,7 @@ const listeners = new Set();
 function load() {
   try {
     const raw = sessionStorage.getItem(KEY);
-    if (raw) { const s = JSON.parse(raw); if (s && s.version === 1) return s; }
+    if (raw) { const s = JSON.parse(raw); if (s && s.version === 2) return s; }
   } catch (_) { /* storage unavailable */ }
   return seed();
 }

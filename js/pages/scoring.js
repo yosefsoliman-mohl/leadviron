@@ -109,8 +109,8 @@ export default {
           if (!ok) return; store.update((s) => { s.scoring.version = 'Published v1.3'; s.scoring.dirty = false; }); toast('Scoring rules published', 'Demo simulation — no operational scores changed.'); ctx.rerender();
         }),
         versions: () => modal({ title: 'Versions', body: `<table class="tbl"><thead><tr><th>Version</th><th>Status</th><th>By</th><th>Date</th></tr></thead><tbody>
-            <tr><td>${esc(store.s.scoring.version)}</td><td>${statusBadge(store.s.scoring.version.startsWith('Draft') ? 'Draft' : 'Published')}</td><td>Ahmed Ashour</td><td>Oct 29, 2026</td></tr>
-            <tr><td>v1.2</td><td>${statusBadge(store.s.scoring.version.startsWith('Draft') ? 'Published' : 'Archived', { tone: store.s.scoring.version.startsWith('Draft') ? '' : 'gray' })}</td><td>Ahmed Ashour</td><td>Oct 14, 2026</td></tr>
+            <tr><td>${esc(store.s.scoring.version)}</td><td>${statusBadge(store.s.scoring.version.startsWith('Draft') ? 'Draft' : 'Published')}</td><td>Yosef Soliman</td><td>Oct 29, 2026</td></tr>
+            <tr><td>v1.2</td><td>${statusBadge(store.s.scoring.version.startsWith('Draft') ? 'Published' : 'Archived', { tone: store.s.scoring.version.startsWith('Draft') ? '' : 'gray' })}</td><td>Yosef Soliman</td><td>Oct 14, 2026</td></tr>
             <tr><td>v1.1</td><td>${statusBadge('Archived', { tone: 'gray' })}</td><td>Maya Hassan</td><td>Sep 30, 2026</td></tr></tbody></table>
             <div class="row mt12"><button class="btn sm" data-reset>${icon('rotate', 14)} Restore default weights</button></div>`, buttons: [{ label: 'Close', value: null }],
           onMount: (ov) => ov.querySelector('[data-reset]').addEventListener('click', () => { ov.querySelector('[data-close]').click(); edit((sc) => sc.factors.forEach((f) => { f.max = DEFAULT_MAX[f.key]; })); toast('Default weights restored', 'Draft only.'); }) }),

@@ -48,7 +48,7 @@ export default {
             <tbody>${members.length ? members.map((m) => `<tr class="${m.role === d.id ? 'selected' : ''}">
               <td><input type="checkbox" class="check" data-change="sel" data-id="${m.id}" ${ui.sel.has(m.id) ? 'checked' : ''} aria-label="Select ${esc(m.name)}"></td>
               <td><div class="cell-person">${avatar(m.name, '', 'gray')}<div><div class="nm">${esc(m.name)}</div><div class="co">${esc(m.email)}</div></div></div></td>
-              <td>${select(s.roles.map((r) => r.id), m.role, `data-change="member-role" data-id="${m.id}" aria-label="Role for ${esc(m.name)}"`, 'sm')}</td>
+              <td>${select(s.roles.map((r) => r.id), m.role, `data-change="member-role" data-id="${m.id}" aria-label="Role for ${esc(m.name)}" style="min-width:190px"`, 'sm')}</td>
               <td>${esc(m.team)}</td>
               <td>${statusBadge(m.status, { tone: m.status === 'Active' ? '' : 'gray' })}</td>
               <td>${esc(m.access)}</td>
