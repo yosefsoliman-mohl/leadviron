@@ -92,14 +92,20 @@ const P = {
   star: '<path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/>',
   sparkle: '<path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/>',
   menu: '<path d="M3 6h18M3 12h18M3 18h18"/>',
-  // Brand-ish source glyphs (simplified, for recognition only)
-  linkedin: '<rect x="2" y="2" width="20" height="20" rx="3" fill="currentColor" stroke="none"/><path d="M7 10v7M7 7v.01M11 17v-7M11 13a2.5 2.5 0 0 1 5 0v4" stroke="#fff" stroke-width="2"/>',
-  whatsapp: '<path d="M3 21l1.65-4.6A8.5 8.5 0 1 1 7.7 19.4z"/><path d="M9 8.5c0 3.5 2.5 6.5 6.5 6.5l1-1.5-2-1-1 1c-1.2-.4-2.6-1.8-3-3l1-1-1-2z" fill="currentColor" stroke="none"/>',
-  meta: '<path d="M2.5 15c0-4 2-8 4.5-8 3.5 0 6 10 10 10 2 0 4.5-1.5 4.5-5s-2-5-4-5c-3.5 0-6.5 10-10 10C4 17 2.5 16.2 2.5 15z" stroke-width="2.2"/>',
-  google: '<path d="M9 4 3 18a2.5 2.5 0 0 0 4.4 2.3L13 8" stroke-width="3.2"/><path d="m11 4 7 14" stroke-width="3.2"/><circle cx="19" cy="18.6" r="2.2" fill="currentColor" stroke="none"/>',
+};
+
+// Official brand marks (Simple Icons, CC0) in each brand's own colors. Used for sources, channels and integrations.
+const BRAND = {
+  meta: '<path fill="#0081FB" d="M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a6.624 6.624 0 0 0 .265.86 5.297 5.297 0 0 0 .371.761c.696 1.159 1.818 1.927 3.593 1.927 1.497 0 2.633-.671 3.965-2.444.76-1.012 1.144-1.626 2.663-4.32l.756-1.339.186-.325c.061.1.121.196.183.3l2.152 3.595c.724 1.21 1.665 2.556 2.47 3.314 1.046.987 1.992 1.22 3.06 1.22 1.075 0 1.876-.355 2.455-.843a3.743 3.743 0 0 0 .81-.973c.542-.939.861-2.127.861-3.745 0-2.72-.681-5.357-2.084-7.45-1.282-1.912-2.957-2.93-4.716-2.93-1.047 0-2.088.467-3.053 1.308-.652.57-1.257 1.29-1.82 2.05-.69-.875-1.335-1.547-1.958-2.056-1.182-.966-2.315-1.303-3.454-1.303zm10.16 2.053c1.147 0 2.188.758 2.992 1.999 1.132 1.748 1.647 4.195 1.647 6.4 0 1.548-.368 2.9-1.839 2.9-.58 0-1.027-.23-1.664-1.004-.496-.601-1.343-1.878-2.832-4.358l-.617-1.028a44.908 44.908 0 0 0-1.255-1.98c.07-.109.141-.224.211-.327 1.12-1.667 2.118-2.602 3.358-2.602zm-10.201.553c1.265 0 2.058.791 2.675 1.446.307.327.737.871 1.234 1.579l-1.02 1.566c-.757 1.163-1.882 3.017-2.837 4.338-1.191 1.649-1.81 1.817-2.486 1.817-.524 0-1.038-.237-1.383-.794-.263-.426-.464-1.13-.464-2.046 0-2.221.63-4.535 1.66-6.088.454-.687.964-1.226 1.533-1.533a2.264 2.264 0 0 1 1.088-.285z"/>',
+  google: '<path fill="#34A853" d="M3.9998 22.9291C1.7908 22.9291 0 21.1383 0 18.9293s1.7908-3.9998 3.9998-3.9998 3.9998 1.7908 3.9998 3.9998-1.7908 3.9998-3.9998 3.9998z"/>'
+    + '<path fill="#4285F4" d="M23.4641 16.9287L15.4632 3.072C14.3586 1.1587 11.9121.5028 9.9988 1.6074S7.4295 5.1585 8.5341 7.0718l8.0009 13.8567c1.1046 1.9133 3.5511 2.5679 5.4644 1.4646 1.9134-1.1046 2.568-3.5511 1.4647-5.4644z"/>'
+    + '<path fill="#FBBC04" d="M7.5137 4.8438L1.5645 15.1484A4.5 4.5 0 0 1 4 14.4297c2.5597-.0075 4.6248 2.1585 4.4941 4.7148l3.2168-5.5723-3.6094-6.25c-.4499-.7793-.6322-1.6394-.5878-2.4784z"/>',
+  whatsapp: '<path fill="#25D366" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>',
+  linkedin: '<path fill="#0A66C2" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>',
 };
 
 export function icon(name, size = 18, cls = '') {
+  if (BRAND[name]) return `<svg class="${cls}" width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true">${BRAND[name]}</svg>`;
   const body = P[name] || P.circle;
   return `<svg class="${cls}" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
 }
@@ -201,10 +207,10 @@ export function pager(page, pages, action = 'page') {
 
 export function sourceIcon(source, size = 18) {
   const s = String(source).toLowerCase();
-  if (s.includes('meta')) return `<span style="color:#0866ff">${icon('meta', size)}</span>`;
-  if (s.includes('google')) return `<span style="color:#1a73e8">${icon('google', size)}</span>`;
-  if (s.includes('linkedin')) return `<span style="color:#0a66c2">${icon('linkedin', size)}</span>`;
-  if (s.includes('whatsapp')) return `<span style="color:var(--blue-600)">${icon('whatsapp', size)}</span>`;
+  if (s.includes('meta')) return icon('meta', size);
+  if (s.includes('google')) return icon('google', size);
+  if (s.includes('linkedin')) return icon('linkedin', size);
+  if (s.includes('whatsapp')) return icon('whatsapp', size);
   if (s.includes('email')) return `<span style="color:var(--blue-600)">${icon('mail', size)}</span>`;
   if (s.includes('csv')) return `<span style="color:var(--ink-600)">${icon('file', size)}</span>`;
   return `<span style="color:var(--ink-600)">${icon('file', size)}</span>`;
@@ -214,7 +220,7 @@ export function source(name) { return `<span class="owner">${sourceIcon(name)}<s
 export function channelIcon(ch, size = 18) {
   const c = String(ch).toLowerCase();
   if (c.includes('whatsapp')) return icon('whatsapp', size);
-  if (c.includes('linkedin')) return `<span style="color:#0a66c2">${icon('linkedin', size)}</span>`;
+  if (c.includes('linkedin')) return icon('linkedin', size);
   if (c.includes('task')) return icon('file', size);
   return icon('mail', size);
 }

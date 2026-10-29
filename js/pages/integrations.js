@@ -5,7 +5,8 @@ import { settingsTabs } from './settings-tabs.js';
 
 const ui = { q: '', cat: '', status: '' };
 const CATS = ['Lead sources & ads', 'Data providers', 'Communication'];
-const LOGO_COLOR = { meta: '#0866ff', google: '#1a73e8', linkedin: '#0a66c2' };
+// Integrations shown with their official brand mark instead of a generic icon.
+const BRANDS = ['meta', 'google', 'whatsapp', 'linkedin'];
 const NOW = 'Oct 29, 2026, 11:02 AM';
 
 // Integration requirements from the project brief (Settings → Integrations section).
@@ -30,11 +31,10 @@ function card(i) {
       : `<a class="btn" href="#/demo/settings/integrations/${i.id}">Manage</a>`;
   return `<div class="card int-card ${needsAttention(i) ? 'attention' : ''}">
     <div class="head">
-      <a class="logo" href="#/demo/settings/integrations/${i.id}" style="${LOGO_COLOR[i.icon] ? `color:${LOGO_COLOR[i.icon]}` : ''}" aria-label="${esc(i.name)} details">${icon(i.icon, 30)}</a>
-      <div class="grow"><a href="#/demo/settings/integrations/${i.id}" class="strong" style="font-size:16px;color:var(--ink-900)">${esc(i.name)}</a>
+      <a class="logo ${BRANDS.includes(i.icon) ? 'brand' : ''}" href="#/demo/settings/integrations/${i.id}" aria-label="${esc(i.name)} details">${icon(i.icon, 30)}</a>
+      <div class="grow"><a href="#/demo/settings/integrations/${i.id}" class="name">${esc(i.name)}</a>
         <div class="muted">${esc(i.account)}</div>
-        <div class="mt8">${statusBadge(i.status, { tone: isOff(i) || needsAttention(i) ? 'gray' : '' })}</div></div>
-      ${i.assisted ? '<span class="badge gray">Assisted tasks only</span>' : i.primary ? '<span class="badge">Primary</span>' : ''}
+        <div class="row wrap mt8" style="gap:6px">${statusBadge(i.status, { tone: isOff(i) || needsAttention(i) ? 'gray' : '' })}${i.assisted ? '<span class="badge gray">Assisted tasks only</span>' : i.primary ? '<span class="badge outline">Primary</span>' : ''}</div></div>
     </div>
     <div class="foot"><span class="muted small row" style="gap:6px">${icon('clock', 15)} ${esc(i.syncLabel || 'Last sync')} ${esc(i.sync)}</span><span class="grow"></span>${action}</div>
   </div>`;

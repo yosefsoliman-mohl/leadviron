@@ -22,8 +22,11 @@
 
 /* Integrations */
 .int-card { display: flex; flex-direction: column; gap: 10px; padding: 18px 20px; }
-.int-card .head { display: flex; gap: 16px; align-items: flex-start; }
+.int-card .head { display: flex; gap: 16px; align-items: flex-start; min-width: 0; }
+.int-card .name { display: block; font-size: 16px; font-weight: 600; color: var(--ink-900); line-height: 1.3; }
 .int-card .logo { width: 56px; height: 56px; border-radius: 50%; background: var(--blue-50); color: var(--blue-600); display: grid; place-items: center; flex-shrink: 0; }
-.int-card .foot { display: flex; align-items: center; gap: 8px; margin-top: auto; }
+.int-card .logo.brand { background: #fff; box-shadow: inset 0 0 0 1px var(--border); }
+.int-card .foot { display: flex; align-items: center; gap: 8px; margin-top: auto; flex-wrap: wrap; }
+.int-card .foot .btn { margin-left: auto; }
 .int-card.attention { border-color: var(--blue-300); }
 .audit-filter .select { min-width: 170px; }
