@@ -1,0 +1,29 @@
+/* Page styles: settings group */
+
+/* Workspace Setup wizard */
+.ws-page { padding-top: 0; }
+.ws-top { position: absolute; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: space-between; padding: 20px 32px; z-index: 2; }
+.ws-deco { position: absolute; width: 360px; height: 360px; border-radius: 48px; transform: rotate(45deg); background: linear-gradient(135deg, #eef4ff, #f7faff); border: 1px solid var(--blue-100); }
+.ws-steps { list-style: none; display: flex; justify-content: center; margin: 28px auto 30px; padding: 0; max-width: 780px; }
+.ws-steps li { flex: 1; position: relative; text-align: center; }
+.ws-steps li::before { content: ""; position: absolute; top: 18px; left: calc(-50% + 26px); right: calc(50% + 26px); height: 2px; background: var(--ink-150); }
+.ws-steps li:first-child::before { display: none; }
+.ws-steps li.done::before, .ws-steps li.active::before { background: var(--blue-300); }
+.ws-steps button { border: 0; background: none; cursor: pointer; display: inline-flex; flex-direction: column; align-items: center; gap: 8px; color: var(--ink-600); font-size: 15px; }
+.ws-steps .n { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--ink-100); font-weight: 600; color: var(--ink-700); }
+.ws-steps li.active .n { background: var(--blue-600); color: #fff; }
+.ws-steps li.done .n { background: var(--blue-100); color: var(--blue-600); }
+.ws-steps li.active .t { color: var(--blue-600); font-weight: 600; }
+.ws-choice.selected { background: var(--blue-50); }
+@media (max-width: 640px) {
+  .ws-steps .t { display: none; }
+  .ws-top { padding: 14px 16px; }
+}
+
+/* Integrations */
+.int-card { display: flex; flex-direction: column; gap: 10px; padding: 18px 20px; }
+.int-card .head { display: flex; gap: 16px; align-items: flex-start; }
+.int-card .logo { width: 56px; height: 56px; border-radius: 50%; background: var(--blue-50); color: var(--blue-600); display: grid; place-items: center; flex-shrink: 0; }
+.int-card .foot { display: flex; align-items: center; gap: 8px; margin-top: auto; }
+.int-card.attention { border-color: var(--blue-300); }
+.audit-filter .select { min-width: 170px; }
