@@ -1,4 +1,4 @@
-// 18 · Unified Inbox — conversations, lead summary and tasks in one place. Replies are simulated.
+// 18 · Conversations (formerly Unified Inbox) — conversations, lead summary and tasks in one place. Replies are simulated.
 import { icon, esc, avatar, select, searchInput, on, toast, modal, keepFocus } from '../ui.js';
 import { store, leadById, enrichPct, formatDue, ENRICH_FIELDS, FIELD_LABELS, fieldValue, OWNERS } from '../store.js';
 
@@ -27,7 +27,7 @@ function thread(c, l) {
 }
 
 export default {
-  title: 'Inbox',
+  title: 'Conversations',
   render(ctx) {
     const s = store.s;
     if (ctx.query.c && ctx.query.c !== ui._qc) { ui._qc = ctx.query.c; ui.sel = ctx.query.c; const cv = s.conversations.find((x) => x.id === ui.sel); if (cv) ui.status = cv.status; }
@@ -38,7 +38,7 @@ export default {
     const task = l && s.tasks.find((t) => t.leadId === l.id && t.status !== 'Done' && t.type === 'Meeting') || (l && s.tasks.find((t) => t.leadId === l.id && t.status !== 'Done'));
     const counts = (st) => s.conversations.filter((x) => x.status === st).length;
     return `
-    <div class="page-head"><div class="titles"><h1>Inbox</h1><div class="sub">All your conversations, one workspace</div></div></div>
+    <div class="page-head"><div class="titles"><h1>Conversations</h1><div class="sub">All your conversations, one workspace</div></div></div>
     <div class="inbox">
       <div class="card" style="overflow:hidden">
         <div style="padding:12px">${searchInput('Search conversations...', ui.q, 'data-input="q" id="inbox-q"')}

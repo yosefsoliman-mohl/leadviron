@@ -126,7 +126,7 @@ function messagesStep() {
       <div class="field"><label>Workflow</label>${select(s.workflows.filter((w) => w.status !== 'Draft').map((w) => [w.id, `${w.name} · ${w.published}`]), ui.workflow, 'data-change="workflow"')}</div>
       <div class="field"><label>Wait for reply before next step</label>${select([['1', '1 day'], ['2', '2 days'], ['3', '3 days']], ui.waitDays, 'data-change="wait"')}</div>
     </div>
-    <div class="setting-row mt8"><div class="grow"><div>Stop automated follow-ups after a reply</div><div class="muted small">The conversation moves to the owner in Unified Inbox.</div></div>${toggle(ui.stopOnReply, 'data-change="stop"')}</div>
+    <div class="setting-row mt8"><div class="grow"><div>Stop automated follow-ups after a reply</div><div class="muted small">The conversation moves to the owner in Conversations.</div></div>${toggle(ui.stopOnReply, 'data-change="stop"')}</div>
     <a class="small" href="#/demo/workflows/${ui.workflow}/builder">Open workflow in builder ${icon('external', 13)}</a></div>`;
 }
 

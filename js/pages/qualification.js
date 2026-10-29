@@ -44,7 +44,7 @@ export default {
         <button class="btn primary" data-action="publish">${icon('upload', 17)} Publish</button>
         ${select([['', 'Versions'], ['cur', `${set.version} (current)`], ['v2.0', 'v2.0 · Published Oct 12'], ['v1.9', 'v1.9 · Sep 28']], '', 'data-change="version" aria-label="Versions"')}`,
     })}
-    <div class="split3" style="grid-template-columns:260px minmax(0,1fr) 440px">
+    <div class="split3" style="--cols:260px minmax(0,1fr) 440px">
       <div class="card" style="padding:14px">
         <div class="row between" style="padding:4px 6px 10px"><h2>Rule sets</h2><button class="btn sm" data-action="new-set" aria-label="New rule set">${icon('plus', 16)}</button></div>
         <div class="select-list">${s.qualification.sets.map((x) => `<button class="si ${x.id === set.id ? 'active' : ''}" data-action="set" data-id="${x.id}" style="align-items:flex-start;border-radius:8px"><div class="grow"><div class="strong ${x.id === set.id ? 'blue' : ''}" style="${x.id === set.id ? 'color:var(--blue-600)' : ''}">${esc(x.name)}</div><div class="muted small">${esc(x.desc)}</div></div>${statusBadge(x.status, { tone: x.status === 'Active' ? '' : 'gray' })}</button>`).join('')}</div>

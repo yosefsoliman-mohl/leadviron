@@ -87,7 +87,7 @@ function panel(t) {
       <div class="setting-row">${icon('list', 18, 'muted')}<span style="width:120px">Status</span><span class="grow">${select(['To do', 'In progress', 'Done'], t.status, 'data-change="status" aria-label="Status"', 'sm')}</span></div>
       ${t.type === 'Meeting' ? `<div class="setting-row">${icon('calendarCheck', 18, 'muted')}<span style="width:120px">Meeting status</span><span class="grow">${select(['Requested', 'Booked', 'Completed', 'Cancelled'], t.meeting || 'Requested', 'data-change="meeting" aria-label="Meeting status"', 'sm')}</span></div>` : ''}
     </div>
-    ${t.type === 'Meeting' && conv ? `<div class="callout mt12">${icon('info', 18)}<span>Customer requested this time in ${esc(conv.channel)}. <a href="#/demo/inbox?c=${conv.id}">Open conversation</a></span></div>` : ''}
+    ${t.type === 'Meeting' && conv ? `<div class="callout mt12">${icon('info', 18)}<span>Customer requested this time in ${esc(conv.channel)}. <a href="#/demo/conversations?c=${conv.id}">Open conversation</a></span></div>` : ''}
     <div class="divider"></div>
     <div class="row" style="align-items:flex-start">${icon('file', 18, 'muted')}<div><div class="strong" style="font-weight:500">Task notes</div><div class="muted small mt8" style="white-space:pre-wrap">${esc(t.notes || 'No notes.')}</div></div></div>`;
   const info = `<div class="kv">
@@ -100,7 +100,7 @@ function panel(t) {
       <span class="k">Stage</span><span class="v">${statusBadge(l.stage)}</span>
       <span class="k">Qualification</span><span class="v">${statusBadge(l.qual)}</span>
       <span class="k">Score</span><span class="v">${l.score ?? '—'}${l.score != null ? ' / 100' : ''}</span>
-    </div>${conv ? `<a class="btn sm mt12" href="#/demo/inbox?c=${conv.id}">${icon('message', 15)} Open conversation</a>` : ''}`;
+    </div>${conv ? `<a class="btn sm mt12" href="#/demo/conversations?c=${conv.id}">${icon('message', 15)} Open conversation</a>` : ''}`;
   return `<aside class="card card-pad" aria-label="Task details">
     <div class="row" style="align-items:flex-start"><span class="ico-circle lg">${icon(TYPE_ICON[t.type] || 'calendar', 24)}</span>
       <div class="grow"><h2>${esc(t.title)}</h2><div class="muted">${esc(l.name)} · ${esc(l.company || 'Company unknown')}</div><div class="muted small">Lead ID ${l.id}</div></div>

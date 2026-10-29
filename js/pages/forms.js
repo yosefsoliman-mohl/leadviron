@@ -1,6 +1,7 @@
 // 06 · Web Forms — intake forms, their status and submissions, with a live preview.
 import { icon, esc, owner, statusBadge, stat, pageHead, select, searchInput, on, toast, modal, keepFocus } from '../ui.js';
 import { store, OWNERS } from '../store.js';
+import { leadSettingsTabs, leadSettingsCrumbs } from './settings-tabs.js';
 
 const ui = { q: '', status: '', owner: '', source: '', sel: 'frm-demo', menu: null, period: 'Oct 1 – 29, 2026' };
 
@@ -41,7 +42,8 @@ export default {
     const total = s.forms.reduce((a, f) => a + f.submissions, 0);
     const url = `forms.leadviron.example/${sel.slug}`;
     return `
-    ${pageHead({ title: 'Web Forms', sub: 'Collect and manage inbound inquiries.', actions: `${select(['Oct 1 – 29, 2026', 'Oct 24 – 29, 2026', 'Sep 1 – 30, 2026'], ui.period, 'data-change="period" aria-label="Period"')}<button class="btn primary" data-action="create">${icon('plus', 18)} Create form</button>` })}
+    ${leadSettingsTabs('web-forms')}
+    ${pageHead({ crumbs: leadSettingsCrumbs('Web Forms'), title: 'Web Forms', sub: 'Collect and manage inbound inquiries.', actions: `${select(['Oct 1 – 29, 2026', 'Oct 24 – 29, 2026', 'Sep 1 – 30, 2026'], ui.period, 'data-change="period" aria-label="Period"')}<button class="btn primary" data-action="create">${icon('plus', 18)} Create form</button>` })}
     <div class="grid g4">
       ${stat({ icon: 'file', label: 'Total forms', value: s.forms.length })}
       ${stat({ icon: 'play', label: 'Published', value: s.forms.filter((f) => f.status === 'Published').length })}
@@ -71,14 +73,14 @@ export default {
       </table>
     </div>
     <div class="card mt16" style="padding:20px">
-      <div class="split" style="grid-template-columns:minmax(0,1fr) 420px">
+      <div class="split" style="--cols:minmax(0,1fr) 420px">
         <div>
           <div class="title-row"><h2 style="font-size:22px">${esc(sel.name)}</h2>${statusBadge(sel.status)}</div>
           <div class="row mt12"><input class="input" readonly value="${esc(url)}" style="max-width:480px" aria-label="Form link"><button class="btn" data-action="copy" aria-label="Copy link">${icon('copy', 17)}</button></div>
           <div class="row wrap mt12">
             <button class="btn outline" data-action="preview" data-id="${sel.id}">${icon('eye', 17)} Preview</button>
             <button class="btn outline" data-action="openlink">${icon('external', 17)} Open link</button>
-            <a class="btn outline" href="#/demo/leads/forms/${sel.id}/edit">${icon('edit', 17)} Edit</a>
+            <a class="btn outline" href="#/demo/settings/web-forms/${sel.id}/edit">${icon('edit', 17)} Edit</a>
             <button class="btn outline" data-action="dup" data-id="${sel.id}">${icon('copy', 17)} Duplicate</button>
           </div>
           <div class="divider"></div>
@@ -105,7 +107,7 @@ export default {
         sel: (el, e) => { if (e.target.closest('.rel')) return; ui.sel = el.dataset.id; ui.menu = null; ctx.rerender(); },
         menu: (el, e) => { e.stopPropagation(); ui.menu = ui.menu === el.dataset.id ? null : el.dataset.id; ctx.rerender(); },
         preview: (el) => { const wasOpen = ui.menu; ui.menu = null; if (wasOpen) ctx.rerender(); previewModal(byId(el.dataset.id)); },
-        edit: (el) => { ui.menu = null; ctx.navigate(`/demo/leads/forms/${el.dataset.id}/edit`); },
+        edit: (el) => { ui.menu = null; ctx.navigate(`/demo/settings/web-forms/${el.dataset.id}/edit`); },
         copy: () => { navigator.clipboard?.writeText(`https://forms.leadviron.example/${byId(ui.sel).slug}`).catch(() => {}); toast('Link copied', 'Demo link — it does not host a live form.'); },
         openlink: () => previewModal(byId(ui.sel)),
         dup: (el) => {
@@ -125,7 +127,7 @@ export default {
             const name = form.name.trim() || 'Untitled form';
             const id = `frm-${Date.now().toString(36)}`;
             store.update((s) => s.forms.push({ id, name, status: 'Draft', owner: form.owner, source: 'Web Forms', submissions: 0, updated: 'Oct 29, 2026', slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-'), draft: 'v0.1', published: null, title: name, successMessage: 'Thanks — our team will contact you shortly.', fields: [{ id: 'f1', type: 'text', label: 'Full name', required: true, mapping: 'Full name' }, { id: 'f2', type: 'email', label: 'Work email', required: true, mapping: 'Email' }] }));
-            ctx.navigate(`/demo/leads/forms/${id}/edit`);
+            ctx.navigate(`/demo/settings/web-forms/${id}/edit`);
           }),
       },
       change: { status: set('status'), owner: set('owner'), source: set('source'), period: (el) => { ui.period = el.value; toast(`Showing ${el.value}`, 'Demo totals are fixed sample values.'); } },

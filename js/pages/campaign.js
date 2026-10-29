@@ -15,7 +15,7 @@ function enrolled(c) {
     const pool = s.leads.filter((l) => l.qual === 'Qualified' && (!list || !list.filter || l.enrich === list.filter));
     leads = pool.slice(0, c.audience);
   }
-  // Named leads with real conversations first, so replies line up with the Inbox.
+  // Named leads with real conversations first, so replies line up with Conversations.
   const withConv = new Set(s.conversations.map((x) => x.leadId));
   leads = [...leads.filter((l) => withConv.has(l.id)), ...leads.filter((l) => !withConv.has(l.id))];
   return leads.map((l, i) => ({ l, state: l.stage === 'Converted' || i < c.conversions ? 'Converted' : i < c.replies ? 'Replied' : i < c.reached ? 'Reached' : 'Awaiting outreach' }));
@@ -32,12 +32,12 @@ function channelStats(c) {
 
 function activity(c) {
   if (c.id === 'cmp-ksa') return [
-    ['whatsapp', 'Omar Ali replied on WhatsApp', 'Tomorrow at 2:00 PM Riyadh time works for me.', 'Oct 29, 2026 10:48 AM', '#/demo/inbox?c=cv-omar'],
+    ['whatsapp', 'Omar Ali replied on WhatsApp', 'Tomorrow at 2:00 PM Riyadh time works for me.', 'Oct 29, 2026 10:48 AM', '#/demo/conversations?c=cv-omar'],
     ['pauseCircle', 'Automated follow-ups paused for Omar Ali', 'Paused after reply', 'Oct 29, 2026 10:48 AM', '#/demo/leads/LD-1048'],
     ['calendar', 'Demo scheduling task assigned to Sara Ahmed', 'Omar Ali requested a demo tomorrow 2 PM Riyadh', 'Oct 29, 2026 10:49 AM', '#/demo/sales/tasks?task=TSK-308'],
   ];
   if (!c.reached) return [['calendar', c.status === 'Draft' ? 'Draft saved' : 'Campaign scheduled', c.dates, 'Oct 29, 2026', null]];
-  return [['reply', `${c.replies} replies received`, 'Replies routed to Unified Inbox', c.dates, '#/demo/inbox'], ['send', `${c.reached} contacts reached`, c.channels.join(' · '), c.dates, null]];
+  return [['reply', `${c.replies} replies received`, 'Replies routed to Conversations', c.dates, '#/demo/conversations'], ['send', `${c.reached} contacts reached`, c.channels.join(' · '), c.dates, null]];
 }
 
 function overview(c, rows) {
@@ -108,7 +108,7 @@ function messagesTab(c, rows) {
   const ids = new Set(rows.map((r) => r.l.id));
   const convs = s.conversations.filter((x) => ids.has(x.leadId));
   return `<div class="split"><div class="card card-pad"><h2 class="mb12">Replies</h2>
-      ${convs.length ? convs.map((cv) => { const l = leadById(cv.leadId); const m = cv.messages[cv.messages.length - 1]; return `<a class="list-item" href="#/demo/inbox?c=${cv.id}" style="color:inherit;text-decoration:none">${avatar(l.initials)}<div class="grow"><div class="row"><span class="strong">${esc(l.name)}</span><span class="muted small">${cv.channel} · ${esc(cv.time)}</span></div><div class="muted small">${esc(m.text)}</div></div>${statusBadge(cv.status)}${icon('chevRight', 16)}</a>`; }).join('') : `<div class="empty">${icon('message', 30)}<div>No replies yet.</div></div>`}</div>
+      ${convs.length ? convs.map((cv) => { const l = leadById(cv.leadId); const m = cv.messages[cv.messages.length - 1]; return `<a class="list-item" href="#/demo/conversations?c=${cv.id}" style="color:inherit;text-decoration:none">${avatar(l.initials)}<div class="grow"><div class="row"><span class="strong">${esc(l.name)}</span><span class="muted small">${cv.channel} · ${esc(cv.time)}</span></div><div class="muted small">${esc(m.text)}</div></div>${statusBadge(cv.status)}${icon('chevRight', 16)}</a>`; }).join('') : `<div class="empty">${icon('message', 30)}<div>No replies yet.</div></div>`}</div>
     <div class="card card-pad"><div class="row between mb12"><h3>Messages used</h3><a class="small" href="#/demo/campaigns/templates">Template Library</a></div>
       ${tpls.map((t) => `<div class="list-item"><span class="ico-circle sm">${icon(t.channel === 'Email' ? 'mail' : t.channel === 'WhatsApp' ? 'whatsapp' : 'linkedin', 15)}</span><div class="grow"><div class="small strong">${esc(t.name)}</div><div class="muted tiny">${t.channel} · ${t.language}</div></div>${statusBadge(t.status)}</div>`).join('')}</div></div>`;
 }
@@ -136,7 +136,7 @@ export default {
       : `<button class="btn primary" data-action="duplicate">${icon('copy', 16)} Duplicate</button>`;
     const body = { overview: () => overview(c, rows), audience: () => audienceTab(rows), workflow: () => workflowTab(c), messages: () => messagesTab(c, rows), results: () => resultsTab(c, rows) }[ui.tab]();
     return `
-    <nav class="breadcrumb"><a href="#/demo/campaigns">Campaigns</a><span>/</span><span>${esc(c.name)}</span></nav>
+    <nav class="breadcrumb"><a href="#/demo/campaigns">Lead Generation</a><span>/</span><a href="#/demo/campaigns">Outreach</a><span>/</span><span>${esc(c.name)}</span></nav>
     <div class="page-head"><div class="titles">
       <div class="title-row"><h1>${esc(c.name)}</h1><span class="badge pill" style="height:28px;padding:0 12px">${c.status === 'Running' ? '<span class="bdot"></span>' : icon(STATUS_ICON[c.status], 14)} ${c.status}</span></div>
       <div class="row wrap mt8"><span class="muted">Owner: ${esc(c.owner)}</span>${c.channels.map((ch) => `<span class="chip">${ch === 'LinkedIn tasks' ? `<span style="color:#0a66c2">${icon('linkedin', 16)}</span>` : icon(CH_ICON[ch], 16, 'blue')} ${ch}</span>`).join('')}<span class="muted small">${esc(c.dates)}</span></div></div>
@@ -152,7 +152,7 @@ export default {
       click: {
         tab: (el) => { ui.tab = el.dataset.key; ctx.rerender(); },
         lead: (el) => ctx.navigate(`/demo/leads/${el.dataset.id}`),
-        pause: () => confirm('Pause campaign?', 'Scheduled outreach stops until you resume. Replies keep arriving in the Inbox.', 'Pause campaign').then((ok) => ok && setStatus('Paused', 'Campaign paused')),
+        pause: () => confirm('Pause campaign?', 'Scheduled outreach stops until you resume. Replies keep arriving in Conversations.', 'Pause campaign').then((ok) => ok && setStatus('Paused', 'Campaign paused')),
         resume: () => setStatus('Running', 'Campaign resumed'),
         unschedule: () => confirm('Cancel schedule?', 'The campaign returns to Draft. No messages have been sent.', 'Cancel schedule').then((ok) => ok && setStatus('Draft', 'Schedule cancelled')),
         duplicate: () => { const id = `cmp-copy-${Date.now().toString(36)}`; store.update((s) => s.campaigns.push({ ...c, id, name: `${c.name} (copy)`, status: 'Draft', dates: 'Not scheduled', reached: 0, replies: 0, conversions: 0, channelStats: undefined })); toast('Campaign duplicated', 'Saved as a draft in this demo session.'); ctx.navigate(`/demo/campaigns/${id}`); },

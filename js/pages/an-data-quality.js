@@ -63,7 +63,7 @@ export default {
       <div class="card"><div class="card-head"><h2>Provider match coverage</h2></div><div class="card-body"><div class="table-wrap flat"><table class="tbl">
         <thead><tr><th>Provider</th><th>Leads matched</th><th>Coverage</th><th style="width:40%"></th></tr></thead>
         <tbody>${PROVIDERS.map(([p, m, t], i) => `<tr class="clickable" data-action="provider" data-i="${i}"><td>${p}</td><td class="num">${m} / ${t}</td><td class="num">${((m / t) * 100).toFixed(1)}%</td><td>${bar((m / t) * 100, 'lg')}</td></tr>`).join('')}</tbody></table></div>
-        <div class="row between mt12 small"><span class="muted">Lookups may overlap.</span><a href="#/demo/leads/duplicates">Potential duplicates · ${dupOpen ? 'Review required' : 'All reviewed'} →</a></div></div></div>
+        <div class="row between mt12 small"><span class="muted">Lookups may overlap.</span><a href="#/demo/settings/duplicates">Potential duplicates · ${dupOpen ? 'Review required' : 'All reviewed'} →</a></div></div></div>
     </div>
     <div class="card mt16"><div class="card-head"><h2>Needs attention</h2></div><div class="card-body"><div class="table-wrap flat"><table class="tbl">
       <thead><tr><th>Name</th><th>Issue</th><th>Current status</th><th>Action</th></tr></thead>

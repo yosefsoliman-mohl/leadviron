@@ -15,7 +15,7 @@ export default {
     const s = store.s;
     const today = s.tasks.filter((t) => t.due.startsWith('2026-10-29')).slice(0, 3);
     const groups = [
-      { title: `Follow up with ${s.conversations.filter((c) => c.status === 'Open').length + 2} leads`, sub: 'WhatsApp • 11:00 AM', href: '#/demo/inbox', id: 'g1' },
+      { title: `Follow up with ${s.conversations.filter((c) => c.status === 'Open').length + 2} leads`, sub: 'WhatsApp • 11:00 AM', href: '#/demo/conversations', id: 'g1' },
       { title: `Review ${12} qualified leads`, sub: 'Lead review • 1:30 PM', href: '#/demo/leads?qual=Qualified', id: 'g2' },
       { title: `Complete ${s.tasks.filter((t) => t.type === 'LinkedIn' && t.status !== 'Done').length + 3} LinkedIn tasks`, sub: 'Assisted outreach • 3:00 PM', href: '#/demo/sales/tasks', id: 'g3' },
     ];

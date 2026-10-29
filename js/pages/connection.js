@@ -10,7 +10,7 @@ const LEAD_FIELDS = ['Full name', 'Email', 'Phone', 'Company', 'Job title', 'Cit
 const USAGE = {
   'Data providers': [['manual', 'Manual enrichment'], ['auto', 'Automatic enrichment'], ['fillEmpty', 'Fill empty fields only'], ['preserve', 'Preserve submitted contact details']],
   'Lead sources & ads': [['autoCreate', 'Create leads automatically'], ['dedupe', 'Check duplicates before creating'], ['assign', 'Assign owner by round robin'], ['preserve', 'Preserve submitted contact details']],
-  Communication: [['send', 'Allow sending'], ['inbound', 'Sync replies to Unified Inbox'], ['respectPolicy', 'Enforce contact policies'], ['pauseOnReply', 'Pause automation after reply']],
+  Communication: [['send', 'Allow sending'], ['inbound', 'Sync replies to Conversations'], ['respectPolicy', 'Enforce contact policies'], ['pauseOnReply', 'Pause automation after reply']],
 };
 const MAPPINGS = {
   'Data providers': [['organization.name', 'Company'], ['job_title', 'Job title'], ['location.city', 'City'], ['organization.size', 'Company size'], ['organization.industry', 'Industry'], ['linkedin_url', 'LinkedIn URL']],

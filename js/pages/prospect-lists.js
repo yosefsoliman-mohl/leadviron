@@ -39,7 +39,7 @@ export default {
     const b = sel ? breakdown(sel) : null;
     const box = (ic, n, label, sub) => `<div class="card row" style="padding:14px 16px;gap:14px"><span class="ico-circle lg">${icon(ic, 24)}</span><div><span class="strong" style="font-size:22px">${n}</span> <span class="small">${label}</span>${sub ? `<div class="muted small">${sub}</div>` : ''}</div></div>`;
     return `
-    ${pageHead({ title: 'Prospect Lists', sub: 'Saved audiences and prospecting segments', actions: `<button class="btn primary" data-action="create">${icon('plus', 18)} Create Prospect List</button>` })}
+    ${pageHead({ crumbs: [['Lead Generation', '#/demo/campaigns'], ['Upload List', '#/demo/generation/upload'], ['Prospect lists']], title: 'Prospect Lists', sub: 'Saved audiences and prospecting segments', actions: `<button class="btn primary" data-action="create">${icon('plus', 18)} Create Prospect List</button>` })}
     <div class="filters">
       ${searchInput('Search lists by name...', ui.q, 'data-input="q" id="pl-q"')}
       ${select([['', 'Owner'], ...OWNERS], ui.owner, 'data-change="f" data-k="owner" aria-label="Owner"')}

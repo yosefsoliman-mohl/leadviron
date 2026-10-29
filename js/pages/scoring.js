@@ -46,7 +46,7 @@ export default {
       title: 'Scoring Rules', sub: `B2B priority score · ${esc(sc.version)}${sc.dirty ? ' · <span class="blue">Unsaved changes</span>' : ''}`,
       actions: `<button class="btn" data-action="versions">${icon('history', 17)} Versions</button><button class="btn" data-action="test">${icon('play', 16)} Test</button><button class="btn" data-action="save">${icon('bookmark', 17)} Save draft</button><button class="btn primary" data-action="publish" ${total === 100 ? '' : 'disabled'}>${icon('upload', 17)} Publish</button>`,
     })}
-    <div class="split" style="grid-template-columns:minmax(0,1fr) 440px">
+    <div class="split" style="--cols:minmax(0,1fr) 440px">
       <div class="card card-pad">
         <h2>Score factors</h2>
         <p class="muted mt8">Adjust the weight of each factor. The total maximum points is 100.</p>
@@ -70,7 +70,7 @@ export default {
         <div class="row between"><h2>Test lead</h2>${select(s.leads.slice(0, 12).map((x) => [x.id, x.name]), ui.lead, 'data-change="lead" aria-label="Change lead"', 'sm')}</div>
         <div class="row mt12">${avatar(l.initials, 'lg')}<div><a class="strong" style="font-size:18px;color:var(--ink-900)" href="#/demo/leads/${l.id}">${esc(l.name)}</a><div class="muted">${esc(l.company || 'Company unknown')} · ${l.id}</div></div></div>
         <div class="card row wrap mt12" style="padding:16px;background:var(--blue-50);border-color:var(--blue-100)">
-          <div class="grow"><div class="small">Priority score</div><div><span style="font-size:40px;font-weight:700;color:var(--ink-900)">${v ?? '—'}</span> <span class="muted" style="font-size:20px">/ 100</span></div>${v != null ? statusBadge(`${band(v, sc)} priority`) : '<span class="badge gray">Not assessed</span>'}</div>
+          <div class="grow"><div class="small">Priority score</div><div class="nowrap"><span style="font-size:40px;font-weight:700;color:var(--ink-900)">${v ?? '—'}</span> <span class="muted" style="font-size:20px">/ 100</span></div>${v != null ? statusBadge(`${band(v, sc)} priority`) : '<span class="badge gray">Not assessed</span>'}</div>
           <div class="card row" style="padding:10px 14px">${icon('halfCircle', 22, 'blue')}<div><div class="small">Enrichment</div><div class="blue strong" style="color:var(--blue-600)">${l.enrich === 'complete' ? 'Complete' : l.enrich === 'partial' ? 'Partial' : 'No match'} ${enrichPct(l)}% · ${l.found}/6</div></div></div>
         </div>
         <div class="row between mt16"><h3>Score breakdown</h3><span class="muted small">Maximum points</span></div>
@@ -79,7 +79,7 @@ export default {
       </div>
     </div>
     <div class="card mt16">
-      <div class="card-head"><h2>Example leads in this cohort</h2><div style="width:320px">${searchInput('Search by name, company or email...', ui.q, 'data-input="q" id="sc-q"')}</div></div>
+      <div class="card-head" style="flex-wrap:wrap"><h2>Example leads in this cohort</h2><div style="width:320px;max-width:100%">${searchInput('Search by name, company or email...', ui.q, 'data-input="q" id="sc-q"')}</div></div>
       <div class="table-wrap flat"><table class="tbl"><thead><tr><th class="w-check"></th><th>Name</th><th>Company</th><th>Enrichment coverage (6 fields)</th><th>Priority score (/ 100)</th><th>Qualification</th><th>Owner</th><th>Last activity</th></tr></thead><tbody>
         ${ex.map((x) => { const sv = scoreOf(x, sc); return `<tr class="clickable ${x.id === ui.lead ? 'selected' : ''}" data-action="pick" data-id="${x.id}"><td><input type="checkbox" class="check" ${x.id === ui.lead ? 'checked' : ''} aria-label="Use ${esc(x.name)} as test lead"></td>
           <td><span class="owner">${avatar(x.initials, 'sm')} <span class="strong" style="font-weight:500">${esc(x.name)}</span></span></td><td class="muted">${esc(x.company || 'Not found')}</td>

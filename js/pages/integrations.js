@@ -13,7 +13,7 @@ const NOW = 'Oct 29, 2026, 11:02 AM';
 const REQUIREMENTS = [
   ['Data brokers and enrichment', 'Enrich an existing lead and show value source, confidence and no-match outcomes.', 'Examples to evaluate: People Data Labs or Apollo. Hidden key, supported fields and usage limit; completeness is not guaranteed.'],
   ['LinkedIn', 'Manage assisted follow-up tasks and link approved app capabilities.', 'OAuth and available permissions. Automated messaging is not assumed; many access programs require approval.'],
-  ['WhatsApp Cloud API', 'Sending, replies and message status inside Unified Inbox.', 'Business account, number, token, webhook, approved templates and contact eligibility. Free-form messages depend on the customer service window.'],
+  ['WhatsApp Cloud API', 'Sending, replies and message status inside Conversations.', 'Business account, number, token, webhook, approved templates and contact eligibility. Free-form messages depend on the customer service window.'],
   ['Email SMTP and inbound', 'Send email, then receive replies and link them to the lead and campaign.', 'Host, port, TLS, credentials, From and Reply-To. SMTP for sending; add inbound via IMAP or provider API.'],
   ['Meta Lead Ads', 'Receive Facebook and Instagram form submissions.', 'Page, forms, permissions and leadgen webhook, then lead retrieval and field mapping.'],
   ['Google Lead Forms', 'Receive Google form submissions via webhook.', 'Webhook URL, google_key and field mapping; deduplicate events using lead_id.'],

@@ -60,20 +60,20 @@ export default {
   title: 'Form Editor',
   render(ctx) {
     const f = formOf(ctx.params.formId);
-    if (!f) return `<div class="card card-pad">Form not found. <a href="#/demo/leads/forms">Back to Web Forms</a></div>`;
+    if (!f) return `<div class="card card-pad">Form not found. <a href="#/demo/settings/web-forms">Back to Web Forms</a></div>`;
     if (ui.formId !== f.id) { ui.formId = f.id; ui.sel = (f.fields.find((x) => x.type === 'phone') || f.fields[0])?.id; }
     const fd = f.fields.find((x) => x.id === ui.sel);
     const lib = LIB.filter(([, l]) => l.toLowerCase().includes(ui.libQ.toLowerCase()));
     const ver = [f.draft ? `Draft ${f.draft}` : null, f.published ? `Published ${f.published}` : 'Not published'].filter(Boolean).join(' · ');
     const phoneRule = f.fields.some((x) => x.type === 'phone' && x.requiredWhen === 'WhatsApp opt-in = Yes');
     return `
-    <nav class="breadcrumb"><a href="#/demo/leads">Leads</a><span>/</span><a href="#/demo/leads/forms">Web Forms</a><span>/</span><span>${esc(f.name)}</span></nav>
+    <nav class="breadcrumb"><a href="#/demo/settings/general">Settings</a><span>/</span><a href="#/demo/settings/web-forms">Lead Settings</a><span>/</span><a href="#/demo/settings/web-forms">Web Forms</a><span>/</span><span>${esc(f.name)}</span></nav>
     ${pageHead({
       title: 'Form Editor', sub: `${esc(f.name)} · ${ver}${f.dirty ? ' · <span class="blue">Unsaved changes</span>' : ''}`,
       actions: `<button class="btn" data-action="preview">${icon('eye', 17)} Preview</button><button class="btn" data-action="save">${icon('save', 17)} Save draft</button><button class="btn primary" data-action="publish">${icon('upload', 17)} Publish</button>
         <div class="row" style="width:100%;justify-content:flex-end"><button class="btn" data-action="share">${icon('link', 16)} Share link</button><button class="btn" data-action="embed">${icon('code', 16)} Embed</button></div>`,
     })}
-    <div class="split3" style="grid-template-columns:260px minmax(0,1fr) 400px">
+    <div class="split3" style="--cols:260px minmax(0,1fr) 400px">
       <div class="card card-pad">
         <h2 class="mb12">Field library</h2>
         <div class="search-input">${icon('search', 16)}<input class="input" placeholder="Search fields..." data-input="libq" id="fe-libq" value="${esc(ui.libQ)}"></div>

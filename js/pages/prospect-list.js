@@ -95,7 +95,7 @@ export default {
     return `
     <div class="row wrap" style="align-items:flex-start;gap:20px;margin-bottom:18px">
       <div class="grow" style="min-width:280px">
-        <nav class="breadcrumb"><a href="#/demo/prospecting/lists">Prospecting</a><span>/</span><a href="#/demo/prospecting/lists">Prospect lists</a></nav>
+        <nav class="breadcrumb"><a href="#/demo/campaigns">Lead Generation</a><span>/</span><a href="#/demo/generation/upload">Upload List</a><span>/</span><a href="#/demo/prospecting/lists">Prospect lists</a></nav>
         <h1 style="font-size:32px">${esc(list.name)}</h1>
         <div class="muted mt8" style="font-size:16px">${members.length} prospects · Enrichment results</div>
         <div class="mt8">Owner: ${esc(list.owner)}${list.campaign ? ` · <a href="#/demo/campaigns/${list.campaign}">Linked campaign</a>` : ''}</div>

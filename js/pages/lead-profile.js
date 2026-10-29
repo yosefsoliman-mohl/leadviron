@@ -6,14 +6,14 @@ const ui = { tab: 'overview' };
 const TABS = [['overview', 'Overview'], ['sources', 'Sources'], ['enrichment', 'Enrichment'], ['qual', 'Qualification & Score'], ['conversations', 'Conversations'], ['tasks', 'Tasks'], ['conversions', 'Conversions'], ['consent', 'Consent']];
 
 function enrichmentTable(l) {
-  return `<table class="tbl" style="font-size:13.5px"><thead><tr><th style="background:none;padding-left:0">Field</th><th style="background:none">Value</th><th style="background:none">Status</th>${ui.tab === 'enrichment' ? '<th style="background:none">Source</th><th style="background:none">Confidence</th>' : ''}</tr></thead><tbody>
+  return `<div class="table-wrap flat"><table class="tbl" style="font-size:13.5px"><thead><tr><th style="background:none;padding-left:0">Field</th><th style="background:none">Value</th><th style="background:none">Status</th>${ui.tab === 'enrichment' ? '<th style="background:none">Source</th><th style="background:none">Confidence</th>' : ''}</tr></thead><tbody>
     ${ENRICH_FIELDS.map((f) => {
       const v = fieldValue(l, f);
       return `<tr><td style="padding-left:0">${FIELD_LABELS[f]}</td>
         <td>${v ? `<span class="strong" style="font-weight:500">${esc(v)}</span>` : '<span class="chip gray" style="padding:2px 12px;min-width:200px">Not found</span>'}</td>
         <td>${v ? `<span class="owner blue">${icon('checkCircle', 18)} <span style="color:var(--blue-600)">Found</span></span>` : `<span class="owner muted">${icon('minusCircle', 18)} Missing</span>`}</td>
         ${ui.tab === 'enrichment' ? `<td class="muted">${v ? 'Demo Provider A' : '—'}</td><td class="muted">${v ? `${88 + (f.length % 9)}%` : '—'}</td>` : ''}</tr>`;
-    }).join('')}</tbody></table>`;
+    }).join('')}</tbody></table></div>`;
 }
 
 function activity(l) {
@@ -41,7 +41,7 @@ function tabBody(l) {
     }
     case 'conversations': {
       const cs = s.conversations.filter((c) => c.leadId === l.id);
-      return `<div class="card card-pad">${cs.length ? cs.map((c) => `<a class="list-item" href="#/demo/inbox?c=${c.id}" style="color:inherit;text-decoration:none"><span class="ico-circle">${icon(c.channel === 'WhatsApp' ? 'whatsapp' : 'mail', 18)}</span><div class="grow"><div class="strong">${c.channel} · ${c.messages.length} messages</div><div class="muted small">${esc(c.messages[c.messages.length - 1].text)}</div></div>${statusBadge(c.status)}${icon('chevRight', 16)}</a>`).join('') : '<div class="empty">No conversations yet.</div>'}</div>`;
+      return `<div class="card card-pad">${cs.length ? cs.map((c) => `<a class="list-item" href="#/demo/conversations?c=${c.id}" style="color:inherit;text-decoration:none"><span class="ico-circle">${icon(c.channel === 'WhatsApp' ? 'whatsapp' : 'mail', 18)}</span><div class="grow"><div class="strong">${c.channel} · ${c.messages.length} messages</div><div class="muted small">${esc(c.messages[c.messages.length - 1].text)}</div></div>${statusBadge(c.status)}${icon('chevRight', 16)}</a>`).join('') : '<div class="empty">No conversations yet.</div>'}</div>`;
     }
     case 'tasks': {
       const ts = s.tasks.filter((t) => t.leadId === l.id);

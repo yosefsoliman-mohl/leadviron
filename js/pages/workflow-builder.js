@@ -112,7 +112,7 @@ export default {
     <div class="page-head"><div class="titles"><h1>Workflow Builder</h1>
       <div class="row wrap mt8"><span class="sub" style="margin:0">${esc(w.name)}</span><span class="chip gray" style="padding:2px 10px">${w.draft ? `Draft · ${w.draft}` : `Published · ${w.published}`}</span><span class="muted small">Owner: ${esc(w.owner)}</span>${ui.tested ? '<span class="badge">Test preview</span>' : ''}</div></div>
       <div class="actions"><button class="btn" data-action="save">Save draft</button><button class="btn" data-action="test">${icon('play', 15)} Test</button><button class="btn primary" data-action="publish">${icon('play', 15)} Publish</button></div></div>
-    <div class="split3" style="grid-template-columns:200px minmax(0,1fr) 300px">
+    <div class="split3" style="--cols:200px minmax(0,1fr) 300px">
       <div class="card card-pad stack sm">
         <h2>Blocks</h2>
         <div class="search-input">${icon('search', 15)}<input class="input sm" placeholder="Search blocks" value="${esc(ui.q)}" data-change="bq"></div>

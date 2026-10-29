@@ -1,6 +1,7 @@
 // 08 · Ingestion Monitor — incoming records, imports, and failed/review rows with correction.
 import { icon, esc, stat, pageHead, tabs, select, searchInput, statusBadge, sourceIcon, pager, on, toast, modal, keepFocus } from '../ui.js';
 import { store } from '../store.js';
+import { leadSettingsTabs, leadSettingsCrumbs } from './settings-tabs.js';
 
 const ui = { tab: 'events', q: '', source: '', status: '', period: 'Oct 29, 2026', sel: 'EVT-1204', page: 1, per: 6, fix: {} };
 
@@ -45,7 +46,7 @@ function detail(e) {
     return `<div class="card card-pad"><h2>Record needs review</h2><div class="row mt8"><span class="strong" style="font-size:17px">${e.id}</span>${dotBadge('Needs review')}</div>
       <div class="kv mt12"><span class="k">Source</span><span class="v">${esc(e.source)}</span><span class="k">Received</span><span class="v">${esc(e.time)} (Riyadh)</span><span class="k">Issue</span><span class="v">${esc(e.issue)}</span>${lead ? `<span class="k">Matching lead</span><span class="v"><a href="#/demo/leads/${lead.id}">${esc(lead.name)} · ${lead.id}</a></span>` : ''}</div>
       <div class="callout mt16">${icon('info', 18)}<span>The incoming record is held until someone decides. Nothing is overwritten automatically.</span></div>
-      <div class="row wrap mt12">${lead ? '<a class="btn primary" href="#/demo/leads/duplicates">Open Duplicate Review</a>' : ''}<button class="btn ${lead ? '' : 'primary'}" data-action="approve">${icon('check', 16)} Accept record</button><button class="btn" data-action="skip">${icon('skip', 16)} Skip</button></div></div>`;
+      <div class="row wrap mt12">${lead ? '<a class="btn primary" href="#/demo/settings/duplicates">Open Duplicate Review</a>' : ''}<button class="btn ${lead ? '' : 'primary'}" data-action="approve">${icon('check', 16)} Accept record</button><button class="btn" data-action="skip">${icon('skip', 16)} Skip</button></div></div>`;
   }
   return `<div class="card card-pad"><h2>Event details</h2><div class="row mt8"><span class="strong" style="font-size:17px">${e.id}</span>${dotBadge(e.status)}</div>
     <div class="kv mt12"><span class="k">Source</span><span class="v">${esc(e.source)}</span><span class="k">Received</span><span class="v">${esc(e.time)} (Riyadh)</span><span class="k">Result</span><span class="v">${esc(e.result)}</span></div>
@@ -70,7 +71,7 @@ export default {
       ? `<div class="table-wrap"><table class="tbl"><thead><tr><th>Import</th><th>File</th><th class="c">Rows</th><th class="c">Created</th><th class="c">Updated</th><th class="c">Review</th><th class="c">Failed</th><th>By</th><th>When</th></tr></thead><tbody>
           ${ing.imports.map((m) => `<tr><td class="muted">${m.id}</td><td class="strong" style="font-weight:500">${icon('file', 15)} ${esc(m.file)}</td><td class="c">${m.rows}</td><td class="c">${m.created}</td><td class="c">${m.updated}</td><td class="c">${m.review}</td><td class="c">${m.failed}</td><td>${esc(m.by)}</td><td class="muted">${esc(m.at)}</td></tr>`).join('')}
         </tbody></table></div><button class="btn mt12" data-action="import">${icon('upload', 16)} Import CSV</button>`
-      : `<div class="split" style="grid-template-columns:minmax(0,1fr) 420px">
+      : `<div class="split" style="--cols:minmax(0,1fr) 420px">
         <div><div class="table-wrap"><table class="tbl"><thead><tr><th class="w-check"></th><th>Event</th><th>Source</th><th>Time (Riyadh)</th><th>Status</th><th>Result</th></tr></thead><tbody>
           ${view.map((e) => `<tr class="clickable ${e.id === ui.sel ? 'selected' : ''}" data-action="sel" data-id="${e.id}"><td><input type="checkbox" class="check" ${e.id === ui.sel ? 'checked' : ''} aria-label="Select ${e.id}"></td>
             <td class="strong" style="font-weight:500">${e.id}</td><td><span class="owner">${sourceIcon(e.source, 18)} ${esc(e.source)}</span></td><td>${esc(e.time)}</td><td>${dotBadge(e.status)}</td><td class="muted">${esc(e.result)}</td></tr>`).join('') || '<tr><td colspan="6"><div class="empty">No events match.</div></td></tr>'}
@@ -78,7 +79,8 @@ export default {
         <div class="table-foot"><span class="muted">Showing ${view.length} of ${ui.tab === 'review' ? rows.length : ing.stats.incoming} incoming records</span>${pager(ui.page, pages)}</div></div>
         <div>${detail(sel)}</div></div>`;
     return `
-    ${pageHead({ title: 'Ingestion Monitor', sub: `All sources · ${ui.period}`, actions: `<a class="btn" href="#/demo/settings/integrations">${icon('layers', 16)} Source connections</a>` })}
+    ${leadSettingsTabs('ingestion')}
+    ${pageHead({ crumbs: leadSettingsCrumbs('Ingestion Monitor'), title: 'Ingestion Monitor', sub: `All sources · ${ui.period}`, actions: `<a class="btn" href="#/demo/settings/integrations">${icon('layers', 16)} Source connections</a>` })}
     <div class="grid g4">
       ${stat({ icon: 'file', label: 'Incoming records', value: ing.stats.incoming })}
       ${stat({ icon: 'settings', label: 'Processed', value: ing.stats.processed })}

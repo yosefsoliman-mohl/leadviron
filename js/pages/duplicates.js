@@ -1,6 +1,7 @@
 // 05 · Duplicate Review — compare two records, choose values, merge or keep separate (session only).
 import { icon, esc, avatar, dots, pageHead, tabs, searchInput, on, toast, statusBadge, sourceIcon, keepFocus } from '../ui.js';
 import { store, leadById } from '../store.js';
+import { leadSettingsTabs, leadSettingsCrumbs } from './settings-tabs.js';
 
 const ui = { tab: 'matches', q: '', sel: null, choice: {} };
 
@@ -72,7 +73,7 @@ export default {
     const items = list();
     if (!ui.sel || !s.duplicates.some((d) => d.id === ui.sel)) ui.sel = items[0]?.id || null;
     const sel = s.duplicates.find((d) => d.id === ui.sel);
-    const head = pageHead({ title: 'Duplicate Review', sub: 'Review matching records before merging' });
+    const head = leadSettingsTabs('duplicates') + pageHead({ crumbs: leadSettingsCrumbs('Duplicate Review'), title: 'Duplicate Review', sub: 'Review matching records before merging' });
     const t = tabs([['matches', 'Potential matches', s.duplicates.length], ['history', 'Merge history', s.mergeHistory.length]], ui.tab);
     if (ui.tab === 'history') {
       return `${head}${t}<div class="table-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Kept record</th><th>Other record</th><th>Decision</th><th>By</th><th>When</th></tr></thead><tbody>
@@ -80,7 +81,7 @@ export default {
       </tbody></table></div><p class="muted small mt12">Merges keep every source event, activity and consent record from both sides.</p>`;
     }
     return `${head}${t}
-    <div class="split3 dup-grid" style="grid-template-columns:360px minmax(0,1fr)">
+    <div class="split3 dup-grid" style="--cols:360px minmax(0,1fr)">
       <div class="card" style="padding:12px">
         ${searchInput('Search by name, email or company...', ui.q, 'data-input="q" id="dup-q"')}
         <div class="muted small" style="padding:10px 4px">${items.length} potential matches</div>

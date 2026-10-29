@@ -1,6 +1,7 @@
 // 14 · Campaigns — outreach campaigns with status tabs, filters and a summary panel.
 import { icon, esc, owner, pageHead, select, searchInput, pager, tabs, on, toast, confirm, modal, keepFocus, pct } from '../ui.js';
 import { store, OWNERS } from '../store.js';
+import { genCrumbs, outreachTabs } from './gen-nav.js';
 
 const ui = { tab: 'All', q: '', channel: '', owner: '', status: '', sel: 'cmp-ksa', panel: true };
 const STATUS_ICON = { Running: 'play', Scheduled: 'calendar', Paused: 'pause', Draft: 'file', Completed: 'check' };
@@ -35,7 +36,8 @@ export default {
     const sel = all.find((c) => c.id === ui.sel);
     const list = sel && s.lists.find((l) => l.id === sel.list);
     return `
-    ${pageHead({ title: 'Campaigns', sub: 'Manage your outreach campaigns', actions: `<a class="btn primary" href="#/demo/campaigns/new" style="text-decoration:none">${icon('plus', 18)} Create campaign</a>` })}
+    ${pageHead({ crumbs: genCrumbs('Outreach'), title: 'Campaigns', sub: 'Manage your outreach campaigns', actions: `<a class="btn primary" href="#/demo/campaigns/new" style="text-decoration:none">${icon('plus', 18)} Create campaign</a>` })}
+    ${outreachTabs('campaigns')}
     ${tabs([['All', 'All', all.length], ...['Running', 'Scheduled', 'Paused', 'Draft', 'Completed'].map((t) => [t, t, count(t)])], ui.tab)}
     <div class="filters">
       ${searchInput('Search by campaign name...', ui.q, 'data-input="q" id="cmp-q"')}
@@ -80,7 +82,7 @@ export default {
     const set = (k) => (el) => { ui[k] = el.value; re(); };
     const setStatus = (id, st, msg) => { store.update((s) => { s.campaigns.find((c) => c.id === id).status = st; }); toast(msg, 'Demo simulation — no live campaign was affected.'); re(); };
     const act = {
-      pause: (id) => confirm('Pause campaign?', 'Scheduled outreach stops until you resume. Replies keep arriving in the Inbox.', 'Pause campaign').then((ok) => ok && setStatus(id, 'Paused', 'Campaign paused')),
+      pause: (id) => confirm('Pause campaign?', 'Scheduled outreach stops until you resume. Replies keep arriving in Conversations.', 'Pause campaign').then((ok) => ok && setStatus(id, 'Paused', 'Campaign paused')),
       resume: (id) => setStatus(id, 'Running', 'Campaign resumed'),
       duplicate: (id) => {
         const src = store.s.campaigns.find((c) => c.id === id);

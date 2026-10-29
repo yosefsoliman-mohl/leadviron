@@ -45,3 +45,14 @@
 
 .tbl.nowrap-cells td { white-space: nowrap; }
 .qr-cond .select { flex: 1; min-width: 0; width: auto; }
+
+/* Lead Generation: Upload List & From Social Media */
+.dropzone {
+  display: flex; flex-direction: column; align-items: center; text-align: center; padding: 36px 20px; cursor: pointer;
+  border: 2px dashed var(--blue-200); border-radius: var(--radius-lg); background: var(--blue-50); color: var(--blue-600);
+  transition: border-color .12s, background .12s;
+}
+.dropzone:hover, .dropzone.over { border-color: var(--blue-500); background: var(--blue-100); }
+.dropzone .strong { color: var(--ink-900); }
+.social-card { padding: 18px 20px; display: flex; flex-direction: column; }
+.logo-tile { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; background: #fff; box-shadow: inset 0 0 0 1px var(--border); flex-shrink: 0; }

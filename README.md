@@ -20,7 +20,7 @@ Then open http://localhost:5173 and click **Open Demo**.
 - **Demo data** badge stays visible. Workspace shows 1,240 leads; scenarios use the *KSA Business Prospects* cohort of 120 leads (72 complete, 36 partial, 12 no external match).
 - **Session-only changes.** Edits (stage moves, merges, task completion, settings…) are kept in `sessionStorage`. **Reset Demo** (avatar menu, top right) restores the original scenario.
 - **Simulated actions.** Publish, Send, Connect, Enrich, Test and similar buttons show a clear simulation notice. Nothing is sent, no paid enrichment runs, and no external account is changed.
-- **Navigation** follows the approved map: Integrations lives under **Settings → Integrations**; Web Forms, Form Editor and Ingestion Monitor live under **Leads**; Workspace Setup is optional inside Settings.
+- **Navigation** follows the lead journey: Dashboard → Lead Generation (Outreach, Upload List, From Social Media) → All Leads → Lead Enrichment → Lead Qualifying → Lead Scoring → Workflows → Conversations → Sales Workspace → Analytics → Settings. Settings holds Organization pages, **Lead Settings** (Web Forms, Duplicate Review, Ingestion Monitor), Integrations and the optional Workspace Setup. Links from the first release redirect to the new paths.
 
 ## Structure
 

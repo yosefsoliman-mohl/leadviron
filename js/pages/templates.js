@@ -1,6 +1,7 @@
 // 17 · Template Library — edit LinkedIn, WhatsApp and Email templates with a live personalization preview.
 import { icon, esc, statusBadge, pageHead, select, searchInput, on, toast, modal, keepFocus } from '../ui.js';
 import { store, leadById, enrichLabel } from '../store.js';
+import { genCrumbs, outreachTabs } from './gen-nav.js';
 
 const ui = { q: '', channel: '', purpose: '', language: '', sel: 'tpl-b2b', recipient: 'LD-0912', draft: null };
 const CH_ICON = { Email: 'mail', WhatsApp: 'whatsapp', LinkedIn: 'linkedin' };
@@ -44,14 +45,15 @@ export default {
     const purposes = [...new Set(s.templates.map((t) => t.purpose))];
     const dirty = JSON.stringify(d) !== JSON.stringify(s.templates.find((t) => t.id === d.id));
     return `
-    ${pageHead({ title: 'Template Library', sub: 'Create and manage message templates for your outreach campaigns', actions: `<button class="btn primary" data-action="create">${icon('plus', 18)} Create template</button>` })}
+    ${pageHead({ crumbs: genCrumbs('Outreach', '#/demo/campaigns', 'Template Library'), title: 'Template Library', sub: 'Create and manage message templates for your outreach campaigns', actions: `<button class="btn primary" data-action="create">${icon('plus', 18)} Create template</button>` })}
+    ${outreachTabs('templates')}
     <div class="filters">
       <div style="flex:0 1 380px">${searchInput('Search templates...', ui.q, 'data-input="q" id="tpl-q"')}</div>
       ${select([['', 'Channel'], 'Email', 'WhatsApp', 'LinkedIn'], ui.channel, 'data-change="channel" aria-label="Channel"')}
       ${select([['', 'Purpose'], ...purposes], ui.purpose, 'data-change="purpose" aria-label="Purpose"')}
       ${select([['', 'Language'], 'English', 'Arabic'], ui.language, 'data-change="language" aria-label="Language"')}
     </div>
-    <div class="split3" style="grid-template-columns:300px minmax(0,1fr) minmax(0,1fr)">
+    <div class="split3" style="--cols:300px minmax(0,1fr) minmax(0,1fr)">
       <div class="card" style="overflow:hidden">
         <div class="card-head"><h2>${list.length} templates</h2></div>
         <div class="select-list">${list.map((t) => `<button class="si ${t.id === ui.sel ? 'active' : ''}" data-action="pick" data-id="${t.id}">

@@ -1,7 +1,7 @@
 /* Page styles: sales group (Sales Pipeline, Tasks & Calendar, Analytics) */
 
 /* ---------- Kanban ---------- */
-.kanban { display: grid; grid-template-columns: repeat(6, minmax(176px, 1fr)); gap: 12px; overflow-x: auto; padding-bottom: 8px; align-items: start; }
+.kanban { display: grid; grid-template-columns: repeat(6, minmax(200px, 1fr)); gap: 12px; overflow-x: auto; padding-bottom: 8px; align-items: start; }
 .kb-col { background: var(--ink-50); border: 1px solid var(--border); border-radius: var(--radius-lg); min-height: 420px; display: flex; flex-direction: column; transition: border-color .12s, background .12s; }
 .kb-col.drop { border-color: var(--blue-500); background: var(--blue-50); box-shadow: 0 0 0 3px var(--blue-100); }
 .kb-head { display: flex; align-items: flex-start; gap: 8px; padding: 12px 14px; background: var(--blue-50); border-radius: var(--radius-lg) var(--radius-lg) 0 0; border-bottom: 1px solid var(--border); }
@@ -15,7 +15,10 @@
 .kb-card.dragging { opacity: .45; }
 .kb-card .nm { font-weight: 600; color: var(--ink-900); }
 .kb-card .co { font-size: 12.5px; color: var(--ink-500); }
-.kb-card .meta { display: grid; grid-template-columns: auto 1fr; gap: 0 14px; margin-top: 8px; font-size: 11.5px; color: var(--ink-500); }
+.kb-card { min-width: 0; }
+.kb-card .nm { padding-right: 28px; }
+.kb-card .meta { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 14px; align-items: center; margin-top: 8px; font-size: 11.5px; color: var(--ink-500); }
+.kb-card .meta .badge { max-width: 100%; height: 22px; padding: 0 8px; font-size: 11.5px; overflow: hidden; text-overflow: ellipsis; justify-self: start; }
 .kb-card .meta .sc { font-size: 17px; font-weight: 600; color: var(--ink-900); }
 .kb-next { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding: 7px 10px; border-radius: 8px; background: var(--blue-50); color: var(--blue-700); font-size: 12.5px; font-weight: 500; }
 .kb-menu { position: absolute; top: 6px; right: 6px; }

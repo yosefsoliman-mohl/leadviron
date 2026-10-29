@@ -6,37 +6,42 @@ import { icon, esc, toast, confirm, avatar } from './ui.js';
 const ROUTES = [
   ['/login', 'login', { bare: true }],
   ['/demo/dashboard', 'dashboard'],
-  ['/demo/leads', 'leads'],
-  ['/demo/leads/duplicates', 'duplicates'],
-  ['/demo/leads/forms', 'forms'],
-  ['/demo/leads/forms/:formId/edit', 'form-editor'],
-  ['/demo/leads/ingestion', 'ingestion'],
-  ['/demo/leads/:leadId', 'lead-profile'],
-  ['/demo/prospecting/lists', 'prospect-lists'],
-  ['/demo/prospecting/lists/:listId', 'prospect-list'],
-  ['/demo/intelligence/enrichment', 'enrichment'],
-  ['/demo/intelligence/qualification', 'qualification'],
-  ['/demo/intelligence/scoring', 'scoring'],
+  // Lead Generation
   ['/demo/campaigns', 'campaigns'],
   ['/demo/campaigns/new', 'campaign-setup'],
   ['/demo/campaigns/templates', 'templates'],
   ['/demo/campaigns/:campaignId', 'campaign'],
-  ['/demo/inbox', 'inbox'],
+  ['/demo/generation/upload', 'upload-list'],
+  ['/demo/prospecting/lists', 'prospect-lists'],
+  ['/demo/prospecting/lists/:listId', 'prospect-list'],
+  ['/demo/generation/social', 'social-leads'],
+  // Leads and intelligence
+  ['/demo/leads', 'leads'],
+  ['/demo/leads/:leadId', 'lead-profile'],
+  ['/demo/intelligence/enrichment', 'enrichment'],
+  ['/demo/intelligence/qualification', 'qualification'],
+  ['/demo/intelligence/scoring', 'scoring'],
   ['/demo/workflows', 'workflows'],
   ['/demo/workflows/history', 'executions'],
   ['/demo/workflows/runs/:runId', 'run'],
   ['/demo/workflows/:workflowId/builder', 'workflow-builder'],
+  ['/demo/conversations', 'inbox'],
   ['/demo/sales/pipeline', 'pipeline'],
   ['/demo/sales/tasks', 'tasks'],
   ['/demo/analytics/acquisition', 'an-acquisition'],
   ['/demo/analytics/outreach', 'an-outreach'],
   ['/demo/analytics/sales-team', 'an-sales-team'],
   ['/demo/analytics/data-quality', 'an-data-quality'],
+  // Settings (incl. Lead Settings and Integrations)
   ['/demo/settings/general', 'set-general'],
   ['/demo/settings/team', 'set-team'],
   ['/demo/settings/fields-stages', 'set-fields'],
   ['/demo/settings/contact-policies', 'set-policies'],
   ['/demo/settings/audit', 'set-audit'],
+  ['/demo/settings/web-forms', 'forms'],
+  ['/demo/settings/web-forms/:formId/edit', 'form-editor'],
+  ['/demo/settings/duplicates', 'duplicates'],
+  ['/demo/settings/ingestion', 'ingestion'],
   ['/demo/settings/workspace-setup', 'set-workspace', { bare: true }],
   ['/demo/settings/integrations', 'integrations'],
   ['/demo/settings/integrations/:connectionId', 'connection'],
@@ -46,50 +51,58 @@ const ROUTES = [
   return { path, page, re, keys, ...opts };
 });
 
-// Sidebar: Integrations lives inside Settings (approved navigation map).
+// Older paths from the first demo release keep working.
+const MOVED = [
+  ['/demo/inbox', '/demo/conversations'],
+  ['/demo/leads/forms', '/demo/settings/web-forms'],
+  ['/demo/leads/duplicates', '/demo/settings/duplicates'],
+  ['/demo/leads/ingestion', '/demo/settings/ingestion'],
+];
+
+const under = (...prefixes) => (p) => prefixes.some((x) => p === x || p.startsWith(`${x}/`));
+
+// Sidebar order follows the lead journey; supporting tools live under Settings.
 const NAV = [
-  { label: 'Dashboard', icon: 'home', href: '#/demo/dashboard', match: '/demo/dashboard' },
-  { label: 'Leads', icon: 'users', match: '/demo/leads', children: [
-    ['All Leads', '#/demo/leads', (p) => p === '/demo/leads' || /^\/demo\/leads\/LD-/.test(p)],
-    ['Duplicate Review', '#/demo/leads/duplicates'],
-    ['Web Forms', '#/demo/leads/forms', (p) => p.startsWith('/demo/leads/forms')],
-    ['Ingestion Monitor', '#/demo/leads/ingestion'],
+  { label: 'Dashboard', icon: 'home', href: '#/demo/dashboard', match: under('/demo/dashboard') },
+  { label: 'Lead Generation', icon: 'zap', match: under('/demo/campaigns', '/demo/generation', '/demo/prospecting'), children: [
+    ['Outreach', '#/demo/campaigns', under('/demo/campaigns')],
+    ['Upload List', '#/demo/generation/upload', under('/demo/generation/upload', '/demo/prospecting')],
+    ['From Social Media', '#/demo/generation/social'],
   ] },
-  { label: 'Prospecting', icon: 'search', match: '/demo/prospecting', children: [
-    ['Prospect Lists', '#/demo/prospecting/lists', (p) => p.startsWith('/demo/prospecting/lists')],
-  ] },
-  { label: 'Lead Intelligence', icon: 'chart', match: '/demo/intelligence', children: [
-    ['Enrichment Operations', '#/demo/intelligence/enrichment'],
-    ['Qualification Rules', '#/demo/intelligence/qualification'],
-    ['Scoring Rules', '#/demo/intelligence/scoring'],
-  ] },
-  { label: 'Outreach Campaigns', icon: 'send', match: '/demo/campaigns', children: [
-    ['Campaigns', '#/demo/campaigns', (p) => p.startsWith('/demo/campaigns') && !p.startsWith('/demo/campaigns/templates')],
-    ['Template Library', '#/demo/campaigns/templates'],
-  ] },
-  { label: 'Inbox', icon: 'mail', href: '#/demo/inbox', match: '/demo/inbox' },
-  { label: 'Workflows', icon: 'flow', match: '/demo/workflows', children: [
+  { label: 'All Leads', icon: 'users', href: '#/demo/leads', match: under('/demo/leads') },
+  { label: 'Lead Enrichment', icon: 'database', href: '#/demo/intelligence/enrichment', match: under('/demo/intelligence/enrichment') },
+  { label: 'Lead Qualifying', icon: 'target', href: '#/demo/intelligence/qualification', match: under('/demo/intelligence/qualification') },
+  { label: 'Lead Scoring', icon: 'star', href: '#/demo/intelligence/scoring', match: under('/demo/intelligence/scoring') },
+  { label: 'Workflows', icon: 'flow', match: under('/demo/workflows'), children: [
     ['All Workflows', '#/demo/workflows', (p) => p === '/demo/workflows' || p.endsWith('/builder')],
-    ['Execution History', '#/demo/workflows/history', (p) => p.startsWith('/demo/workflows/history') || p.startsWith('/demo/workflows/runs')],
+    ['Execution History', '#/demo/workflows/history', under('/demo/workflows/history', '/demo/workflows/runs')],
   ] },
-  { label: 'Sales Workspace', icon: 'grid', match: '/demo/sales', children: [
+  { label: 'Conversations', icon: 'message', href: '#/demo/conversations', match: under('/demo/conversations') },
+  { label: 'Sales Workspace', icon: 'grid', match: under('/demo/sales'), children: [
     ['Sales Pipeline', '#/demo/sales/pipeline'],
     ['Tasks & Calendar', '#/demo/sales/tasks'],
   ] },
-  { label: 'Analytics', icon: 'bars', match: '/demo/analytics', children: [
+  { label: 'Analytics', icon: 'bars', match: under('/demo/analytics'), children: [
     ['Funnel & Acquisition', '#/demo/analytics/acquisition'],
     ['Outreach Performance', '#/demo/analytics/outreach'],
     ['Sales & Team', '#/demo/analytics/sales-team'],
     ['Data Quality', '#/demo/analytics/data-quality'],
   ] },
 ];
-const SETTINGS_NAV = { label: 'Settings', icon: 'settings', match: '/demo/settings', children: [
-  ['Organization & General', '#/demo/settings/general'],
+// A child without an href is a section label.
+const SETTINGS_NAV = { label: 'Settings', icon: 'settings', match: under('/demo/settings'), children: [
+  ['Organization'],
+  ['General', '#/demo/settings/general'],
   ['Team & Permissions', '#/demo/settings/team'],
   ['Fields & Stages', '#/demo/settings/fields-stages'],
   ['Contact Policies', '#/demo/settings/contact-policies'],
   ['Audit Log', '#/demo/settings/audit'],
-  ['Integrations', '#/demo/settings/integrations', (p) => p.startsWith('/demo/settings/integrations')],
+  ['Lead Settings'],
+  ['Web Forms', '#/demo/settings/web-forms', under('/demo/settings/web-forms')],
+  ['Duplicate Review', '#/demo/settings/duplicates'],
+  ['Ingestion Monitor', '#/demo/settings/ingestion'],
+  ['Connections'],
+  ['Integrations', '#/demo/settings/integrations', under('/demo/settings/integrations')],
   ['Workspace Setup', '#/demo/settings/workspace-setup'],
 ] };
 
@@ -106,12 +119,13 @@ function parseHash() {
 export function navigate(href) { location.hash = href.replace(/^#/, ''); }
 
 function navGroup(g, path) {
-  const active = path.startsWith(g.match);
+  const active = g.match(path);
   if (!g.children) {
     return `<a class="nav-item ${active ? 'active' : ''}" href="${g.href}">${icon(g.icon, 20)}<span>${g.label}</span></a>`;
   }
   const open = active || openGroups.has(g.label);
   const subs = g.children.map(([label, href, test]) => {
+    if (!href) return `<div class="nav-label">${label}</div>`;
     const p = href.slice(1);
     const on = test ? test(path) : path === p;
     return `<a class="${on ? 'active' : ''}" href="${href}">${label}</a>`;
@@ -122,14 +136,17 @@ function navGroup(g, path) {
   </div>`;
 }
 
+// Settings sits last in the scrolling list so its long submenu never squeezes the main sections.
+const navHtml = (path) => `${NAV.map((g) => navGroup(g, path)).join('')}<div class="nav-settings">${navGroup(SETTINGS_NAV, path)}</div>`;
+
 function shell(path) {
   const s = store.s;
   const unread = s.notifications.filter((n) => n.unread).length;
   return `<div class="app" id="shell">
     <aside class="sidebar" aria-label="Main navigation">
       <div class="sidebar-logo"><a href="#/demo/dashboard" aria-label="Leadviron home"><img src="assets/logo.png" alt="Leadviron"></a></div>
-      <nav class="nav">${NAV.map((g) => navGroup(g, path)).join('')}</nav>
-      <div class="sidebar-foot">${navGroup(SETTINGS_NAV, path)}<div class="powered">Powered by <b>Upshifters</b></div></div>
+      <nav class="nav">${navHtml(path)}</nav>
+      <div class="sidebar-foot"><div class="powered">Powered by <b>Upshifters</b></div></div>
     </aside>
     <div class="main">
       <header class="topbar">
@@ -262,6 +279,8 @@ function mountPage() {
 async function route() {
   const { path, query } = parseHash();
   if (path === '/' || path === '' || path === '/demo') { navigate('/demo/dashboard'); return; }
+  const moved = MOVED.find(([from]) => path === from || path.startsWith(`${from}/`));
+  if (moved) { location.replace(`#${moved[1]}${path.slice(moved[0].length)}${location.hash.includes('?') ? location.hash.slice(location.hash.indexOf('?')) : ''}`); return; }
   const r = ROUTES.find((x) => x.re.test(path));
   if (!r) { navigate('/demo/dashboard'); return; }
   const m = path.match(r.re);
@@ -276,9 +295,7 @@ async function route() {
   if (!sameShell) renderShell();
   else {
     // Update the sidebar active state without rebuilding the shell
-    const nav = document.querySelector('.sidebar .nav');
-    nav.innerHTML = NAV.map((g) => navGroup(g, path)).join('');
-    document.querySelector('.sidebar-foot').innerHTML = navGroup(SETTINGS_NAV, path) + '<div class="powered">Powered by <b>Upshifters</b></div>';
+    document.querySelector('.sidebar .nav').innerHTML = navHtml(path);
     mountPage();
   }
   document.getElementById('page')?.focus({ preventScroll: true });

@@ -13,7 +13,7 @@ const OPTS = {
   language: ['English', 'Arabic'],
   dateFormat: ['DD MMM YYYY', 'MM/DD/YYYY', 'YYYY-MM-DD'],
   weekStart: ['Sunday', 'Monday', 'Saturday'],
-  landing: ['Dashboard', 'All Leads', 'Inbox', 'Sales Pipeline'],
+  landing: ['Dashboard', 'All Leads', 'Conversations', 'Sales Pipeline'],
   leadView: ['All leads', 'My leads', 'Qualified leads'],
 };
 

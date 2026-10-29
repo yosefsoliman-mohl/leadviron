@@ -59,7 +59,7 @@ export default {
             <div class="kv" style="grid-template-columns:100px 1fr;font-size:13px;gap:7px"><span class="k">Coverage</span><span class="v">${enrichPct(l)}% · ${l.found}/6 ${dots(l.found)}</span><span class="k">Qualification</span><span class="v">${statusBadge(l.qual)}</span><span class="k">Score</span><span class="v">${l.score ?? '—'}</span>
               <span class="k" style="margin-top:8px">Original source</span><span class="v" style="margin-top:8px">${esc(l.source)}</span><span class="k">Email</span><span class="v" style="word-break:break-all">${esc(l.email)}</span><span class="k">Phone</span><span class="v">${esc(l.phone)}</span></div>
           </div>
-          ${conv ? `<a class="btn sm mt12" href="#/demo/inbox?c=${conv.id}">${icon('message', 15)} Open conversation</a>` : ''}</div>
+          ${conv ? `<a class="btn sm mt12" href="#/demo/conversations?c=${conv.id}">${icon('message', 15)} Open conversation</a>` : ''}</div>
         ${failed ? `<div class="card card-pad"><h2>Failed step details</h2>
           <div class="row mt12"><span class="ico-circle lg">${icon('mail', 22)}</span><div class="grow"><div class="strong">Email connector unavailable</div><div class="muted small">No message accepted by provider.</div></div><span class="vdivider"></span><b>${r.attempts || 2} attempts</b></div>
           <div class="callout mt12" style="background:var(--ink-50);display:block">The email provider rejected the request. The connector is currently unavailable.<br>This is a known provider rejection, not a delivery timeout.</div></div>
