@@ -2,6 +2,7 @@
 // Each page module exports default { title, render(ctx) => html, mount?(root, ctx) }.
 import { store } from './store.js';
 import { icon, esc, toast, confirm, avatar } from './ui.js';
+import { enhanceTables } from './table-sort.js';
 
 const ROUTES = [
   ['/', 'landing', { bare: true }],
@@ -270,11 +271,13 @@ function mountPage() {
   // Re-renders keep the scroll position; fresh navigations start at the top.
   if (current.fresh) { window.scrollTo(0, 0); current.fresh = false; } else window.scrollTo(0, scrollY);
   // Replace the node to drop old delegated listeners before mounting again.
+  let root = el;
   if (current.mod.mount) {
-    const fresh = el.cloneNode(true);
-    el.replaceWith(fresh);
-    current.mod.mount(fresh, ctx);
+    root = el.cloneNode(true);
+    el.replaceWith(root);
+    current.mod.mount(root, ctx);
   }
+  enhanceTables(root);
 }
 
 async function route() {

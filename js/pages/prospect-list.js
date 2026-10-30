@@ -1,9 +1,11 @@
 // 10 · Prospect List Details — people in a list, their data coverage and actions that fit their data.
 import { icon, esc, avatar, ring, tabs, select, searchInput, pager, statusBadge, on, toast, modal, bar, keepFocus } from '../ui.js';
 import { store, enrichPct, OWNERS } from '../store.js';
+import { sortTh, nextSort, sortBy } from '../table-sort.js';
 import { listLeads } from './prospect-lists.js';
 
-const ui = { listId: null, tab: 'prospects', industry: '', role: '', city: '', enrich: '', q: '', page: 1, per: 10, sel: new Set(['LD-0731', 'LD-0915']) };
+const ui = { listId: null, tab: 'prospects', industry: '', role: '', city: '', enrich: '', q: '', page: 1, per: 10, sel: new Set(['LD-0731', 'LD-0915']), sort: { key: null, dir: 0 } };
+const SORT = { name: (l) => l.name, company: (l) => l.company, title: (l) => l.title, city: (l) => l.city, size: (l) => (l.size ? parseInt(l.size, 10) : null), industry: (l) => l.industry, linkedin: (l) => (l.linkedin ? 0 : 1), enrich: (l) => l.found };
 const ICP = { industries: ['Logistics', 'Transport', 'Retail', 'Trading'], roles: ['Director', 'Manager', 'Head'], cities: ['Riyadh', 'Jeddah', 'Dammam'], sizes: ['51 – 200', '201 – 500', '501+'] };
 
 const dash = '<span class="muted">—</span>';
@@ -56,7 +58,7 @@ export default {
     const members = listLeads(list);
     const n = (k) => members.filter((l) => l.enrich === k).length;
     const pc = (k) => (members.length ? Math.round((n(k) / members.length) * 100) : 0);
-    const rows = filtered(members);
+    const rows = sortBy(filtered(members), ui.sort, SORT);
     const pages = Math.max(1, Math.ceil(rows.length / ui.per));
     if (ui.page > pages) ui.page = pages;
     const view = rows.slice((ui.page - 1) * ui.per, ui.page * ui.per);
@@ -82,7 +84,7 @@ export default {
         ${sel.length ? '<button class="link-btn small" data-action="clear" style="margin-left:auto">Clear</button>' : ''}
       </div>
       <div class="table-wrap"><table class="tbl nowrap-cells">
-        <thead><tr><th class="w-check"><input type="checkbox" class="check" data-change="all" ${view.length && view.every((l) => ui.sel.has(l.id)) ? 'checked' : ''} aria-label="Select page"></th><th>Prospect</th><th>Company</th><th>Job title</th><th>City</th><th>Company size</th><th>Industry</th><th>LinkedIn</th><th>Enrichment</th><th></th></tr></thead>
+        <thead><tr><th class="w-check"><input type="checkbox" class="check" data-change="all" ${view.length && view.every((l) => ui.sel.has(l.id)) ? 'checked' : ''} aria-label="Select page"></th>${[['Prospect', 'name'], ['Company', 'company'], ['Job title', 'title'], ['City', 'city'], ['Company size', 'size'], ['Industry', 'industry'], ['LinkedIn', 'linkedin'], ['Enrichment', 'enrich']].map(([t, k]) => sortTh(t, k, ui.sort)).join('')}<th></th></tr></thead>
         <tbody>${view.map((l) => `<tr class="${ui.sel.has(l.id) ? 'selected' : ''}">
           <td><input type="checkbox" class="check" data-change="sel" data-id="${l.id}" ${ui.sel.has(l.id) ? 'checked' : ''} aria-label="Select ${esc(l.name)}"></td>
           <td><a class="cell-person" href="#/demo/leads/${l.id}" style="text-decoration:none">${avatar(l.initials, 'sm')}<div><div class="nm">${esc(l.name)}</div>${l.enrich === 'nomatch' ? '<div class="co">Contact data retained</div>' : ''}</div></a></td>
@@ -116,6 +118,7 @@ export default {
     on(root, {
       click: {
         tab: (el) => { ui.tab = el.dataset.key; ctx.rerender(); },
+        sort: (el) => { ui.sort = nextSort(ui.sort, el.dataset.key); ui.page = 1; ctx.rerender(); },
         page: (el) => { ui.page = +el.dataset.page; ctx.rerender(); },
         clear: () => { ui.sel.clear(); ctx.rerender(); },
         profile: () => toast('LinkedIn profile not opened', 'The demo does not open external profiles.'),
@@ -145,7 +148,7 @@ export default {
       change: {
         f: (el) => { ui[el.dataset.k] = el.value; ui.page = 1; ctx.rerender(); },
         sel: (el) => { el.checked ? ui.sel.add(el.dataset.id) : ui.sel.delete(el.dataset.id); ctx.rerender(); },
-        all: (el) => { filtered(listLeads(list)).slice((ui.page - 1) * ui.per, ui.page * ui.per).forEach((l) => (el.checked ? ui.sel.add(l.id) : ui.sel.delete(l.id))); ctx.rerender(); },
+        all: (el) => { sortBy(filtered(listLeads(list)), ui.sort, SORT).slice((ui.page - 1) * ui.per, ui.page * ui.per).forEach((l) => (el.checked ? ui.sel.add(l.id) : ui.sel.delete(l.id))); ctx.rerender(); },
       },
       input: { q: (el) => { ui.q = el.value; ui.page = 1; keepFocus('#pd-q', ctx.rerender); } },
     });

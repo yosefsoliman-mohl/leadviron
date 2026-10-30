@@ -170,7 +170,7 @@ svg { flex-shrink: 0; }
 .page-head .titles { flex: 1; min-width: 240px; }
 .page-head .sub { margin-top: 4px; color: var(--ink-500); font-size: 15px; }
 .page-head .actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-.page-head .actions .select, .card-head .select, .row > .select { width: auto; }
+.page-head .actions .select, .card-head .select, .row > .select, .table-foot .select { width: auto; }
 .breadcrumb { display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--ink-500); margin-bottom: 8px; flex-wrap: wrap; }
 .breadcrumb a { color: var(--ink-600); }
 .breadcrumb a:hover { color: var(--blue-600); }
@@ -316,6 +316,13 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
   text-align: left; font-weight: 500; color: var(--ink-600); font-size: 12.5px; padding: 10px 14px;
   background: var(--ink-50); border-bottom: 1px solid var(--border); white-space: nowrap;
 }
+.tbl th.sortable { cursor: pointer; user-select: none; }
+.tbl th.sortable:hover, .tbl th.sortable:focus-visible { color: var(--ink-900); outline: none; }
+.tbl th.sortable:focus-visible { box-shadow: inset 0 -2px 0 var(--blue-500); }
+.tbl th .sort-ind { display: inline-flex; vertical-align: -2px; margin-left: 4px; color: var(--ink-300); }
+.tbl th.sortable:hover .sort-ind { color: var(--ink-500); }
+.tbl th[aria-sort="ascending"], .tbl th[aria-sort="descending"] { color: var(--blue-600); }
+.tbl th[aria-sort="ascending"] .sort-ind, .tbl th[aria-sort="descending"] .sort-ind { color: var(--blue-600); }
 .tbl td { padding: 11px 14px; border-bottom: 1px solid var(--ink-100); vertical-align: middle; }
 .tbl tr:last-child td { border-bottom: 0; }
 .tbl tbody tr { transition: background .1s; }

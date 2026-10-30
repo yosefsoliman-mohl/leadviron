@@ -1,6 +1,7 @@
 // Lead Generation · From Social Media — leads captured by Meta, Google and LinkedIn lead forms.
 import { icon, esc, avatar, owner, statusBadge, dots, pageHead, select, toggle, on, toast, confirm } from '../ui.js';
 import { store, enrichLabel, enrichPct } from '../store.js';
+import { sortTh, nextSort, sortBy } from '../table-sort.js';
 import { genCrumbs } from './gen-nav.js';
 
 // Platform totals match the Dashboard and Funnel & Acquisition sample figures.
@@ -15,7 +16,9 @@ const PLATFORMS = [
 const FORM_FOR = { 'Meta Ads': 'KSA Logistics — Demo request', 'Google Ads': 'Lead management software — KSA', LinkedIn: 'Operations leaders — KSA' };
 const TIMES = ['10:55 AM', '10:51 AM', '10:32 AM', '9:48 AM', '9:15 AM', 'Yesterday', 'Yesterday', 'Oct 27', 'Oct 27', 'Oct 26'];
 
-const ui = { platform: '', page: 1 };
+const ui = { platform: '', page: 1, sort: { key: null, dir: 0 } };
+const QUAL_ORDER = ['Qualified', 'Needs information', 'Disqualified'];
+const SORT = { name: (l) => l.name, platform: (l) => l.source, enrich: (l) => l.found, qual: (l) => QUAL_ORDER.indexOf(l.qual), owner: (l) => l.owner };
 
 function settings() {
   const s = store.s;
@@ -28,7 +31,7 @@ export default {
     const s = store.s;
     const cfg = settings();
     const synced = s.socialSynced || 'Oct 29, 2026, 10:55 AM';
-    const rows = s.leads.filter((l) => ['Meta Ads', 'Google Ads', 'LinkedIn'].includes(l.source) && (!ui.platform || l.source === ui.platform));
+    const rows = sortBy(s.leads.filter((l) => ['Meta Ads', 'Google Ads', 'LinkedIn'].includes(l.source) && (!ui.platform || l.source === ui.platform)), ui.sort, SORT);
     const per = 10; const pages = Math.max(1, Math.ceil(rows.length / per));
     if (ui.page > pages) ui.page = pages;
     const view = rows.slice((ui.page - 1) * per, ui.page * per);
@@ -60,7 +63,7 @@ export default {
     <div class="split mt16">
       <div class="card">
         <div class="card-head" style="flex-wrap:wrap"><h2>Recent social leads</h2>${select([['', 'All platforms'], ...PLATFORMS.map((p) => [p.key, p.name])], ui.platform, 'data-change="platform" aria-label="Platform"', 'sm')}</div>
-        <div class="table-wrap flat"><table class="tbl"><thead><tr><th>Lead</th><th>Platform · form</th><th>Captured</th><th>Enrichment</th><th>Qualification</th><th>Owner</th></tr></thead><tbody>
+        <div class="table-wrap flat"><table class="tbl"><thead><tr>${sortTh('Lead', 'name', ui.sort)}${sortTh('Platform · form', 'platform', ui.sort)}<th>Captured</th>${sortTh('Enrichment', 'enrich', ui.sort)}${sortTh('Qualification', 'qual', ui.sort)}${sortTh('Owner', 'owner', ui.sort)}</tr></thead><tbody>
           ${view.map((l, i) => `<tr class="clickable" data-action="open" data-id="${l.id}">
             <td><div class="cell-person">${avatar(l.initials)}<div><div class="nm">${esc(l.name)}</div><div class="co">${esc(l.company || 'Company unknown')}</div></div></div></td>
             <td><div class="owner">${icon(PLATFORMS.find((p) => p.key === l.source).icon, 18)}<span class="small">${esc(FORM_FOR[l.source])}</span></div></td>
@@ -90,6 +93,7 @@ export default {
       click: {
         platform: (el) => setPlatform(el.dataset.key),
         page: (el) => { ui.page = +el.dataset.page; ctx.rerender(); },
+        sort: (el) => { ui.sort = nextSort(ui.sort, el.dataset.key); ui.page = 1; ctx.rerender(); },
         open: (el) => ctx.navigate(`/demo/leads/${el.dataset.id}`),
         sync: () => { store.update((s) => { s.socialSynced = 'Oct 29, 2026, 11:06 AM'; }); toast('Sync simulated · no new leads', 'No platform was contacted. Demo data unchanged.'); ctx.rerender(); },
       },

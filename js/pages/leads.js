@@ -1,9 +1,24 @@
 // 03 · All Leads — searchable, filterable cohort table with bulk actions.
 import { icon, esc, avatar, owner, statusBadge, dots, pageHead, select, searchInput, pager, source, on, toast, modal, keepFocus, tabs } from '../ui.js';
-import { store, enrichLabel, enrichPct, OWNERS, SOURCES, COHORT, WORKSPACE_TOTAL, cohortCounts } from '../store.js';
+import { store, enrichLabel, enrichPct, OWNERS, SOURCES, STAGES, COHORT, WORKSPACE_TOTAL, cohortCounts } from '../store.js';
 import { addLeadModal } from '../shared.js';
+import { sortTh, nextSort, sortBy } from '../table-sort.js';
 
-const ui = { tab: 'all', q: '', source: '', owner: '', enrich: '', qual: '', stage: '', page: 1, per: 10, sel: new Set() };
+const ui = { tab: 'all', q: '', source: '', owner: '', enrich: '', qual: '', stage: '', page: 1, per: 10, sel: new Set(), sort: { key: null, dir: 0 } };
+
+// Minutes since the last activity, from labels like "Email • 25m", "Call • 2h", "Reply • 1d", "Updated • Today".
+function ago(label) {
+  const t = label.split('•').pop().trim();
+  const m = t.match(/^(\d+)([mhd])$/);
+  if (m) return +m[1] * { m: 1, h: 60, d: 1440 }[m[2]];
+  return { Now: 0, Today: 300, Yesterday: 1440 }[t] ?? 99999;
+}
+const QUAL_ORDER = ['Qualified', 'Needs information', 'Disqualified'];
+const SORT = {
+  name: (l) => l.name, source: (l) => l.source, enrich: (l) => l.found, qual: (l) => QUAL_ORDER.indexOf(l.qual),
+  score: (l) => l.score, stage: (l) => STAGES.indexOf(l.stage), owner: (l) => l.owner, activity: (l) => ago(l.activity),
+};
+const sorted = () => sortBy(filtered(), ui.sort, SORT);
 
 function filtered() {
   const q = ui.q.trim().toLowerCase();
@@ -31,7 +46,7 @@ export default {
     const qk = JSON.stringify(ctx.query);
     if (qk !== ui._qk) { ui._qk = qk; ['source', 'owner', 'enrich', 'qual', 'stage'].forEach((k) => { if (ctx.query[k]) { ui[k] = ctx.query[k]; ui.page = 1; } }); }
     const c = cohortCounts();
-    const rows = filtered();
+    const rows = sorted();
     const pages = Math.max(1, Math.ceil(rows.length / ui.per));
     if (ui.page > pages) ui.page = pages;
     const view = rows.slice((ui.page - 1) * ui.per, ui.page * ui.per);
@@ -69,7 +84,7 @@ export default {
         ${ui.sel.size ? '<button class="link-btn small" data-action="clear-sel" style="margin-left:auto">Clear selection</button>' : ''}
       </div>
       <table class="tbl">
-        <thead><tr><th class="w-check"></th><th>Lead / Company</th><th>Source</th><th>Enrichment</th><th>Qualification</th><th>Score</th><th>Stage</th><th>Owner</th><th>Last activity</th></tr></thead>
+        <thead><tr><th class="w-check"></th>${[['Lead / Company', 'name'], ['Source', 'source'], ['Enrichment', 'enrich'], ['Qualification', 'qual'], ['Score', 'score'], ['Stage', 'stage'], ['Owner', 'owner'], ['Last activity', 'activity']].map(([t, k]) => sortTh(t, k, ui.sort)).join('')}</tr></thead>
         <tbody>${view.length ? view.map((l) => `<tr class="clickable ${ui.sel.has(l.id) ? 'selected' : ''}" data-action="open" data-id="${l.id}">
           <td><input type="checkbox" class="check" data-change="sel" data-id="${l.id}" ${ui.sel.has(l.id) ? 'checked' : ''} aria-label="Select ${esc(l.name)}"></td>
           <td><div class="cell-person">${avatar(l.initials, '')}<div><div class="nm">${esc(l.name)}${l.isNew ? ' <span class="badge">New</span>' : ''}</div><div class="co">${esc(l.company || 'Not found')}</div></div></div></td>
@@ -97,6 +112,7 @@ export default {
       click: {
         open: (el, e) => { if (e.target.closest('input')) return; ctx.navigate(`/demo/leads/${el.dataset.id}`); },
         tab: (el) => { ui.tab = el.dataset.key; ui.page = 1; re(); },
+        sort: (el) => { ui.sort = nextSort(ui.sort, el.dataset.key); ui.page = 1; re(); },
         page: (el) => { ui.page = +el.dataset.page; re(); },
         add: () => addLeadModal().then((id) => { if (id) { ui.page = 1; ctx.rerender(); } }),
         'clear-sel': () => { ui.sel.clear(); re(); },
@@ -126,7 +142,7 @@ export default {
         source: set('source'), owner: set('owner'), enrich: set('enrich'),
         per: (el) => { ui.per = +el.value; ui.page = 1; re(); },
         sel: (el) => { el.checked ? ui.sel.add(el.dataset.id) : ui.sel.delete(el.dataset.id); re(); },
-        'sel-all': (el) => { const rows = filtered().slice((ui.page - 1) * ui.per, ui.page * ui.per); rows.forEach((l) => (el.checked ? ui.sel.add(l.id) : ui.sel.delete(l.id))); re(); },
+        'sel-all': (el) => { const rows = sorted().slice((ui.page - 1) * ui.per, ui.page * ui.per); rows.forEach((l) => (el.checked ? ui.sel.add(l.id) : ui.sel.delete(l.id))); re(); },
       },
       input: { q: (el) => { ui.q = el.value; ui.page = 1; re(); } },
     });

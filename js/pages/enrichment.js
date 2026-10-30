@@ -1,9 +1,10 @@
 // 11 · Enrichment Operations — what each enrichment run added, from which provider, with confidence and cost.
 import { icon, esc, avatar, dots, bar, pageHead, tabs, select, searchInput, pager, statusBadge, toggle, on, toast, modal, confirm, keepFocus } from '../ui.js';
 import { store, leadById, fieldValue, ENRICH_FIELDS, FIELD_LABELS, cohortCounts } from '../store.js';
+import { sortTh, nextSort, sortBy } from '../table-sort.js';
 import { allFields, enabledFields, costPerLead, fieldState, GROUPS, FIELD_TYPES, FIELD_SOURCES } from '../enrich-fields.js';
 
-const ui = { tab: 'completed', q: '', sel: 'LD-1048', page: 1, per: 6, _tabQ: null, fq: '', fgroup: '' };
+const ui = { tab: 'completed', q: '', sel: 'LD-1048', page: 1, per: 6, _tabQ: null, fq: '', fgroup: '', sort: { key: null, dir: 0 } };
 let timer = null;
 // One example of each outcome first: complete, partial and no external match.
 const FEATURED = ['LD-0731', 'LD-0842', 'LD-0915', 'LD-1048', 'LD-1052', 'LD-0912'];
@@ -103,9 +104,10 @@ export default {
     const q = ui.q.toLowerCase();
     const rank = (l) => { const i = FEATURED.indexOf(l.id); return i < 0 ? 99 : i; };
     const rows = s.leads.filter((l) => !q || [l.name, l.company, l.email].join(' ').toLowerCase().includes(q)).sort((a, b) => rank(a) - rank(b));
+    const sortedRows = sortBy(rows, ui.sort, { name: (l) => l.name, provider: (l) => provider(l, s.leads.indexOf(l)), found: (l) => l.found, result: (l) => resultLabel(l) });
     const pages = Math.max(1, Math.ceil(rows.length / ui.per));
     if (ui.page > pages) ui.page = pages;
-    const view = rows.slice((ui.page - 1) * ui.per, ui.page * ui.per);
+    const view = sortedRows.slice((ui.page - 1) * ui.per, ui.page * ui.per);
     const sel = ui.sel ? leadById(ui.sel) : null;
     const sumCard = (ic, t, n, meta, found, badge = '') => `<div class="card stat" style="padding:14px 18px"><div class="ico">${icon(ic, 22)}</div><div class="grow"><div class="label">${t}</div><div class="row"><span class="value num" style="font-size:24px">${n}</span><span class="muted">${meta}</span></div></div><div>${badge}${dots(found, 6, 'lg')}</div></div>`;
 
@@ -133,7 +135,7 @@ export default {
       <div class="split mt16" style="${sel ? '' : 'grid-template-columns:1fr'}">
         <div>
           ${searchInput('Search by name, company or email...', ui.q, 'data-input="q" id="enr-q"')}
-          <div class="table-wrap mt12"><table class="tbl nowrap-cells"><thead><tr><th class="w-check"></th><th>Lead</th><th>Provider</th><th>Fields found</th><th>Processing</th><th>Result</th><th class="c">Demo credits</th></tr></thead><tbody>
+          <div class="table-wrap mt12"><table class="tbl nowrap-cells"><thead><tr><th class="w-check"></th>${sortTh('Lead', 'name', ui.sort)}${sortTh('Provider', 'provider', ui.sort)}${sortTh('Fields found', 'found', ui.sort)}<th>Processing</th>${sortTh('Result', 'result', ui.sort)}<th class="c">Demo credits</th></tr></thead><tbody>
             ${view.map((l) => `<tr class="clickable ${l.id === ui.sel ? 'selected' : ''}" data-action="sel" data-id="${l.id}"><td><input type="checkbox" class="check" ${l.id === ui.sel ? 'checked' : ''} aria-label="Select ${esc(l.name)}"></td>
               <td><div class="cell-person">${avatar(l.initials, 'sm')}<div><div class="nm">${esc(l.name)}</div><div class="co">${esc(l.company || 'Not found')}</div></div></div></td>
               <td>${provider(l, s.leads.indexOf(l))}</td><td class="num">${l.found} / 6</td><td>${statusBadge('Completed')}</td><td>${statusBadge(resultLabel(l), { tone: l.enrich === 'nomatch' ? 'gray' : '' })}</td><td class="c">1</td></tr>`).join('') || '<tr><td colspan="7"><div class="empty">No leads match.</div></td></tr>'}
@@ -167,6 +169,7 @@ export default {
     on(root, {
       click: {
         tab: (el) => { ui.tab = el.dataset.key; ctx.rerender(); },
+        sort: (el) => { ui.sort = nextSort(ui.sort, el.dataset.key); ui.page = 1; ctx.rerender(); },
         page: (el) => { ui.page = +el.dataset.page; ctx.rerender(); },
         sel: (el) => { ui.sel = el.dataset.id; ctx.rerender(); },
         close: () => { ui.sel = null; ctx.rerender(); },
