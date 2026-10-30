@@ -30,7 +30,7 @@ function heroVisual() {
   return `<div class="lp-hero-visual" aria-hidden="true">
     <div class="lp-glow"></div>
     <div class="lp-card lp-main">
-      <div class="lp-row"><span class="lp-av">OA</span><div class="lp-grow"><b>Omar Ali</b><small>Ops Director · Horizon Logistics</small></div><span class="lp-pill">Qualified</span></div>
+      <div class="lp-row"><span class="lp-av">MG</span><div class="lp-grow"><b>Mishal Al-Ghamdi</b><small>Ops Director · Horizon Logistics</small></div><span class="lp-pill">Qualified</span></div>
       <div class="lp-score">
         <div class="lp-ring" style="--p:86"><span>86</span></div>
         <div class="lp-grow">
@@ -80,8 +80,8 @@ const qualifyVisual = `<div class="lp-card lp-pad">
 </div>`;
 
 const chatVisual = `<div class="lp-card lp-pad lp-chat">
-  <div class="lp-row lp-chat-head"><span class="lp-av">OA</span><div class="lp-grow"><b>Omar Ali</b><small>WhatsApp · Horizon Logistics</small></div>${logo('whatsapp', 18)}</div>
-  <div class="lp-msg out">Hi Omar, would you like a short demo for your team?</div>
+  <div class="lp-row lp-chat-head"><span class="lp-av">MG</span><div class="lp-grow"><b>Mishal Al-Ghamdi</b><small>WhatsApp · Horizon Logistics</small></div>${logo('whatsapp', 18)}</div>
+  <div class="lp-msg out">Hi Mishal, would you like a short demo for your team?</div>
   <div class="lp-msg in">Yes, please. We want to improve lead follow-up.</div>
   <div class="lp-msg out">Happy to help. What time suits you?</div>
   <div class="lp-msg in">Tomorrow at 2:00 PM Riyadh time works for me.</div>
