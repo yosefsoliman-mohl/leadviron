@@ -4,6 +4,7 @@ import { store } from './store.js';
 import { icon, esc, toast, confirm, avatar } from './ui.js';
 
 const ROUTES = [
+  ['/', 'landing', { bare: true }],
   ['/login', 'login', { bare: true }],
   ['/demo/dashboard', 'dashboard'],
   // Lead Generation
@@ -111,7 +112,7 @@ const openGroups = new Set();
 let current = null; // { route, params, query, mod }
 
 function parseHash() {
-  const raw = location.hash.replace(/^#/, '') || '/login';
+  const raw = location.hash.replace(/^#/, '') || '/';
   const [path, qs = ''] = raw.split('?');
   return { path, query: Object.fromEntries(new URLSearchParams(qs)) };
 }
@@ -278,7 +279,8 @@ function mountPage() {
 
 async function route() {
   const { path, query } = parseHash();
-  if (path === '/' || path === '' || path === '/demo') { navigate('/demo/dashboard'); return; }
+  if (path === '' ) { navigate('/'); return; }
+  if (path === '/demo') { navigate('/demo/dashboard'); return; }
   const moved = MOVED.find(([from]) => path === from || path.startsWith(`${from}/`));
   if (moved) { location.replace(`#${moved[1]}${path.slice(moved[0].length)}${location.hash.includes('?') ? location.hash.slice(location.hash.indexOf('?')) : ''}`); return; }
   const r = ROUTES.find((x) => x.re.test(path));

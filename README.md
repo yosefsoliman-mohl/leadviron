@@ -16,6 +16,7 @@ Then open http://localhost:5173 and click **Open Demo**.
 
 ## How the demo behaves
 
+- **Landing page** at the site root explains the platform (generation, enrichment, qualifying, scoring, conversations, automation) and links into the demo. Client logos in `assets/clients/` come from Simple Icons and Wikimedia Commons.
 - **Login → Open Demo → Dashboard.** Open Demo needs no credentials and creates no account. Sign In is shown but disabled until the accounts phase.
 - **Demo data** badge stays visible. Workspace shows 1,240 leads; scenarios use the *KSA Business Prospects* cohort of 120 leads (72 complete, 36 partial, 12 no external match).
 - **Session-only changes.** Edits (stage moves, merges, task completion, settings…) are kept in `sessionStorage`. **Reset Demo** (avatar menu, top right) restores the original scenario.

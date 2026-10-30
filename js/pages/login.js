@@ -8,7 +8,7 @@ export default {
     <div class="blob" style="width:520px;height:520px;left:-260px;top:-300px"></div>
     <div class="blob" style="width:420px;height:420px;right:-160px;bottom:-220px"></div>
     <div class="auth-card">
-      <div class="auth-logo"><img src="assets/logo.png" alt="Leadviron"></div>
+      <div class="auth-logo"><a href="#/" aria-label="Leadviron home"><img src="assets/logo.png" alt="Leadviron"></a></div>
       <div class="card" style="padding:32px;box-shadow:var(--shadow)">
         <div style="text-align:center;margin-bottom:22px">
           <h1 style="font-size:28px">Welcome back</h1>
