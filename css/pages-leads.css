@@ -56,3 +56,11 @@
 .dropzone .strong { color: var(--ink-900); }
 .social-card { padding: 18px 20px; display: flex; flex-direction: column; }
 .logo-tile { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; background: #fff; box-shadow: inset 0 0 0 1px var(--border); flex-shrink: 0; }
+
+/* Enrichment fields tab */
+.ef-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+.ef-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--ink-100); }
+.ef-row:last-child { border-bottom: 0; }
+.ef-row .icon-btn { width: 30px; height: 30px; color: var(--ink-500); }
+.mt4 { margin-top: 4px; }
+@media (max-width: 1100px) { .ef-grid { grid-template-columns: minmax(0, 1fr); } }

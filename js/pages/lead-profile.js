@@ -1,5 +1,6 @@
 // 04 · Lead Profile — identity, enrichment, next step, eligibility and tabbed history.
 import { icon, esc, avatar, statusBadge, bar, select, tabs, on, toast, modal, source as sourceCell } from '../ui.js';
+import { enabledFields, sampleValue } from '../enrich-fields.js';
 import { store, leadById, enrichLabel, enrichPct, fieldValue, ENRICH_FIELDS, FIELD_LABELS, OWNERS, STAGES, cohortCounts, formatDue } from '../store.js';
 
 const ui = { tab: 'overview' };
@@ -14,6 +15,18 @@ function enrichmentTable(l) {
         <td>${v ? `<span class="owner blue">${icon('checkCircle', 18)} <span style="color:var(--blue-600)">Found</span></span>` : `<span class="owner muted">${icon('minusCircle', 18)} Missing</span>`}</td>
         ${ui.tab === 'enrichment' ? `<td class="muted">${v ? 'Demo Provider A' : '—'}</td><td class="muted">${v ? `${88 + (f.length % 9)}%` : '—'}</td>` : ''}</tr>`;
     }).join('')}</tbody></table></div>`;
+}
+
+// Additional and custom enrichment fields switched on in Lead Enrichment → Enrichment fields.
+function extraFields(l) {
+  const fields = enabledFields();
+  if (!fields.length) return `<p class="muted small">No additional fields are switched on. <a href="#/demo/intelligence/enrichment?tab=fields">Choose fields</a></p>`;
+  const vals = fields.map((f) => [f, sampleValue(l, f)]);
+  const found = vals.filter(([, v]) => v).length;
+  return `<div class="row between wrap mb8"><div><span class="strong">Additional fields</span> <span class="muted small">· ${found} of ${fields.length} found</span></div><a class="small" href="#/demo/intelligence/enrichment?tab=fields">Manage fields</a></div>
+    <div class="table-wrap flat"><table class="tbl" style="font-size:13.5px"><tbody>${vals.map(([f, v]) => `<tr><td style="padding-left:0;width:38%">${esc(f.label)}${f.custom ? ' <span class="badge outline">Custom</span>' : ''}</td>
+      <td>${v ? `<span class="strong" style="font-weight:500">${esc(v)}</span>` : `<span class="chip gray" style="padding:2px 12px">${f.source === 'Manual entry' ? 'Add manually' : 'Not found'}</span>`}</td>
+      <td class="muted small nowrap">${v ? esc(f.source.split(' / ')[0]) : '—'}</td></tr>`).join('')}</tbody></table></div>`;
 }
 
 function activity(l) {
@@ -32,7 +45,7 @@ function tabBody(l) {
       <tr><td>EVT-${1100 + (parseInt(l.id.slice(3), 10) % 90)}</td><td>${sourceCell(l.source)}</td><td>Oct 28, 2026 · 4:12 PM</td><td>Name, email, phone</td></tr>
       ${s.duplicates.some((d) => d.a.id === l.id) ? `<tr><td>EVT-1203</td><td>CSV import</td><td>Oct 29, 2026 · 10:52 AM</td><td>Name, email, phone, company <span class="badge gray">Possible duplicate</span></td></tr>` : ''}
       </tbody></table><p class="muted small mt12">Original contact details are retained even when enrichment finds nothing.</p></div>`;
-    case 'enrichment': return `<div class="card card-pad"><div class="row between mb12"><h3>Enrichment results · ENR-1024</h3>${statusBadge(enrichLabel(l))}</div>${enrichmentTable(l)}<div class="row mt16"><button class="btn" data-action="retry">${icon('refresh', 16)} Retry enrichment</button><a class="btn ghost" href="#/demo/intelligence/enrichment">Open Enrichment Operations</a></div></div>`;
+    case 'enrichment': return `<div class="card card-pad"><div class="row between mb12"><h3>Enrichment results · ENR-1024</h3>${statusBadge(enrichLabel(l))}</div>${enrichmentTable(l)}<div class="divider" style="margin:18px 0"></div>${extraFields(l)}<div class="row mt16"><button class="btn" data-action="retry">${icon('refresh', 16)} Retry enrichment</button><a class="btn ghost" href="#/demo/intelligence/enrichment">Open Enrichment Operations</a></div></div>`;
     case 'qual': {
       const b = l.score == null ? null : [Math.round(l.score * 0.42), Math.round(l.score * 0.31), Math.round(l.score * 0.17)];
       return `<div class="grid g2"><div class="card card-pad"><h3>Qualification</h3><div class="mt12">${statusBadge(l.qual)}</div><p class="muted mt12">${esc(l.qualReason || (l.qual === 'Qualified' ? 'Required signals confirmed by B2B qualification rules.' : 'Required information missing.'))}</p><a class="small" href="#/demo/intelligence/qualification">View qualification rules</a></div>
@@ -97,7 +110,7 @@ export default {
         <div class="card card-pad"><div class="row between"><h2>Enrichment overview</h2>${statusBadge(enrichLabel(l))}</div>
           <div class="row mt8" style="gap:20px"><span style="font-size:44px;font-weight:700;color:var(--blue-600)">${pc}%</span><div class="grow"><div>${l.found} of 6 target fields found</div><div class="mt8" style="max-width:360px">${bar(pc, 'lg')}</div></div></div>
           <div class="mt8">${enrichmentTable(l)}</div>
-          ${l.found < 6 ? '<button class="btn outline sm mt12" data-action="review-missing">Review missing fields</button>' : ''}</div>
+          <div class="row wrap mt12">${l.found < 6 ? '<button class="btn outline sm" data-action="review-missing">Review missing fields</button>' : ''}${enabledFields().length && l.enrich !== 'nomatch' ? `<button class="btn ghost sm" data-action="review-missing">+ ${enabledFields().filter((f) => sampleValue(l, f)).length} additional fields found</button>` : ''}</div></div>
         <div class="card card-pad"><h2 class="mb8">Recent activity</h2><div class="timeline">${activity(l)}</div></div>
       </div>
       <div class="stack">
